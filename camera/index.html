@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="color-scheme" content="dark">
+<title>카메라</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;color:#fff;font-family:-apple-system,"SF Pro","Apple SD Gothic Neo","Noto Sans KR",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font-size:16px}
+[hidden]{display:none!important}
+
+#app{position:fixed;inset:0;max-width:430px;margin:0 auto;background:#000;overflow:hidden}
+#vf{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden}
+#box{position:relative;overflow:hidden;background:#111}
+#vid,#up{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:center}
+#up{z-index:1}
+#nocam{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;background:#111;color:#aaa;font-size:15px;text-align:center}
+#nocam button{height:40px;padding:0 18px;border-radius:20px;border:0;background:#333;color:#fff;font-size:15px}
+
+#di{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:126px;height:37px;background:#000;border-radius:20px;z-index:20}
+#dot{position:absolute;top:24px;left:calc(50% + 44px);width:8px;height:8px;border-radius:50%;background:#30d158;z-index:20}
+
+#top{position:absolute;top:0;left:0;right:0;z-index:15;display:flex;justify-content:space-between;align-items:flex-start;padding:62px 26px 0}
+.ib{width:44px;height:44px;border:0;background:none;padding:0;display:flex;align-items:center;justify-content:center}
+.ib svg{width:24px;height:24px}
+.ib.dim{opacity:.35}
+#bHd{width:auto;height:auto;background:none;border:0;color:#ffd60a;display:flex;flex-direction:column;align-items:center;line-height:1;margin-top:0}
+#bHd b{font-size:16px;font-weight:600}
+#bHd small{font-size:11px;margin-top:4px;color:#fff}
+
+#rec{position:absolute;top:58px;left:50%;transform:translateX(-50%);z-index:16;display:flex;gap:7px;align-items:center;background:rgba(0,0,0,.45);padding:6px 12px;border-radius:14px;font-size:15px;font-variant-numeric:tabular-nums}
+#rec i{width:9px;height:9px;border-radius:50%;background:#ff453a;animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.2}}
+
+#cd{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;font-size:120px;font-weight:200;pointer-events:none;text-shadow:0 2px 20px rgba(0,0,0,.4)}
+#flashfx{position:absolute;inset:0;z-index:25;background:#fff;opacity:0;pointer-events:none}
+#flashfx.go{animation:fx .25s ease-out}
+@keyframes fx{0%{opacity:.85}100%{opacity:0}}
+#toast{position:absolute;left:50%;bottom:262px;transform:translateX(-50%);z-index:40;background:rgba(0,0,0,.6);padding:8px 14px;border-radius:14px;font-size:14px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.on{opacity:1}
+
+#bottom{position:absolute;left:0;right:0;bottom:0;z-index:15;padding:40px 0 calc(env(safe-area-inset-bottom,0px) + 22px);background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.45))}
+#zoom{display:flex;justify-content:center;gap:6px;margin-bottom:12px}
+.zb{width:44px;height:44px;border-radius:50%;border:0;background:none;color:#fff;font-size:15px;font-weight:600}
+.zb.on{background:rgba(60,60,60,.75);color:#ffd60a;font-size:17px}
+.zb:disabled{opacity:.35}
+#mid{position:relative;height:84px;margin-bottom:14px}
+#shutter{position:absolute;left:50%;top:0;transform:translateX(-50%);width:84px;height:84px;border-radius:50%;border:3px solid rgba(255,255,255,.55);background:none;padding:0;display:flex;align-items:center;justify-content:center}
+#shIn{width:70px;height:70px;border-radius:50%;background:#fff;transition:all .2s}
+#shIn.vid{background:#ef4b45}
+#shIn.rec{width:34px;height:34px;border-radius:9px}
+#bMore{position:absolute;right:24px;top:13px;width:58px;height:58px;border-radius:50%;border:0;background:rgba(50,50,50,.7);display:flex;align-items:center;justify-content:center}
+#foot{display:flex;align-items:center;gap:10px;padding:0 16px}
+#thumb{width:56px;height:56px;flex:none;border-radius:50%;border:2px solid rgba(255,255,255,.2);overflow:hidden;background:#222;padding:0}
+#thumb img{width:100%;height:100%;object-fit:cover;display:block}
+#modes{flex:1;min-width:0;display:flex;overflow-x:auto;gap:2px;padding:5px;border-radius:30px;background:rgba(40,40,40,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);scrollbar-width:none;scroll-snap-type:x mandatory}
+#modes::-webkit-scrollbar{display:none}
+#modes button{flex:none;height:40px;padding:0 14px;border:0;border-radius:20px;background:none;color:#fff;font-size:15px;font-weight:500;scroll-snap-align:center}
+#modes button.on{background:rgba(255,255,255,.16);color:#ffd60a;font-weight:600}
+.circ{width:56px;height:56px;flex:none;border-radius:50%;border:0;background:rgba(50,50,50,.7);display:flex;align-items:center;justify-content:center}
+.circ svg{width:24px;height:24px}
+
+#sheet{position:fixed;inset:0;z-index:60;display:none}
+#sheet.open{display:block}
+#shade{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+#panel{position:absolute;left:0;right:0;bottom:0;max-height:80%;overflow-y:auto;background:#1c1c1e;border-radius:16px 16px 0 0;padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 18px)}
+.row{padding:12px 0;border-bottom:.5px solid #333}
+.row label{display:block;font-size:14px;color:#aaa;margin-bottom:8px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;min-width:64px;height:36px;border:0;border-radius:10px;background:#2c2c2e;color:#fff;font-size:14px}
+.seg button.on{background:#ffd60a;color:#000;font-weight:600}
+input[type=range]{width:100%;accent-color:#ffd60a}
+.sheetBtns{display:flex;gap:8px;margin-top:14px}
+.sheetBtns button{flex:1;height:44px;border:0;border-radius:12px;background:#2c2c2e;color:#fff;font-size:15px}
+
+#pv{position:absolute;inset:0;z-index:70;background:#000;display:flex;flex-direction:column}
+.pvTop{display:flex;justify-content:space-between;padding:54px 16px 10px}
+.pvTop button{height:36px;padding:0 14px;border:0;border-radius:18px;background:rgba(255,255,255,.16);color:#fff;font-size:15px}
+#pvBody{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
+#pvBody img,#pvBody video{max-width:100%;max-height:100%;object-fit:contain}
+.badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.55);padding:4px 8px;border-radius:8px;font-size:12px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="vf">
+    <div id="box">
+      <video id="vid" playsinline muted autoplay></video>
+      <img id="up" alt="" hidden>
+      <div id="nocam" hidden>
+        <p>카메라를 사용할 수 없습니다.<br>사진을 업로드해 미리보기로 쓸 수 있어요.</p>
+        <button id="nocamUp">사진 업로드</button>
+      </div>
+    </div>
+  </div>
+  <div id="di"></div><div id="dot"></div>
+  <div id="flashfx"></div>
+  <div id="cd"></div>
+  <div id="rec" hidden><i></i><span id="rtime">00:00</span></div>
+  <div id="toast"></div>
+
+  <div id="top">
+    <button id="bFlash" class="ib" aria-label="플래시"></button>
+    <button id="bHd" aria-label="해상도 및 프레임"></button>
+    <button id="bLive" class="ib" aria-label="Live Photo"></button>
+  </div>
+
+  <div id="bottom">
+    <div id="zoom"></div>
+    <div id="mid">
+      <button id="shutter" aria-label="셔터"><span id="shIn"></span></button>
+      <button id="bMore" aria-label="촬영 옵션"></button>
+    </div>
+    <div id="foot">
+      <button id="thumb" aria-label="최근 촬영"><img id="thumbImg" alt="" hidden></button>
+      <div id="modes"></div>
+      <button id="bFlip" class="circ" aria-label="카메라 전환"></button>
+    </div>
+  </div>
+
+  <div id="sheet">
+    <div id="shade"></div>
+    <div id="panel">
+      <div id="rows"></div>
+      <div class="sheetBtns">
+        <button id="sUp">사진 업로드</button>
+        <button id="sCam">카메라로 돌아가기</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pv" hidden>
+    <div class="pvTop"><button id="pvClose">닫기</button><button id="pvDel">삭제</button></div>
+    <div id="pvBody"></div>
+  </div>
+  <input type="file" id="file" accept="image/*" hidden>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* 모드: 실제 iOS 카메라 순서 */
+const MODES = [
+  {id:'video', name:'비디오', video:true},
+  {id:'photo', name:'사진'}
+];
+const RATIOS = {full:null, '4:3':3/4, '16:9':9/16, '1:1':1};
+const FILTERS = {none:'', vivid:'saturate(1.35) contrast(1.05)', mono:'grayscale(1) contrast(1.1)', warm:'sepia(.25) saturate(1.2)'};
+const DEF = {flash:'auto', live:true, timer:0, exp:0, ratio:'full', filter:'none', res:'1080', fps:30, facing:'environment'};
+let S = {...DEF, ...JSON.parse(localStorage.getItem('cam_settings') || '{}')};
+const st = {mode:1, zoom:1, stream:null, items:[], busy:false, recording:false, rec:null, recTimer:null, recStart:0, chunks:[], recAudio:null};
+
+const ROWS = [
+  {label:'노출', key:'exp', type:'range', min:-2, max:2, step:0.1},
+  {label:'타이머', key:'timer', opts:[[0,'끔'],[3,'3초'],[10,'10초']]},
+  {label:'화면 비율', key:'ratio', opts:[['full','전체'],['4:3','4:3'],['16:9','16:9'],['1:1','1:1']]},
+  {label:'필터', key:'filter', opts:[['none','없음'],['vivid','선명'],['mono','흑백'],['warm','따뜻함']]},
+  {label:'해상도', key:'res', opts:[['1080','1080p'],['4k','4K']]},
+  {label:'프레임', key:'fps', opts:[[24,'24'],[30,'30'],[60,'60']]},
+  {label:'카메라', key:'facing', opts:[['environment','후면'],['user','전면']]}
+];
+
+/* ---------- 저장 ---------- */
+function saveSettings(){ localStorage.setItem('cam_settings', JSON.stringify(S)); }
+function persistPhotos(){
+  const list = st.items.filter(i => i.kind === 'photo').map(i => ({kind:'photo', src:i.src, t:i.t}));
+  while (list.length) {
+    try { localStorage.setItem('cam_photos', JSON.stringify(list)); return; }
+    catch (e) { list.pop(); }
+  }
+}
+function loadPhotos(){
+  try { return JSON.parse(localStorage.getItem('cam_photos') || '[]'); } catch (e) { return []; }
+}
+
+/* ---------- 아이콘 ---------- */
+const svg = inner => `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const BOLT = '<path d="M13 2 4 14h6l-1 8 9-12h-6z"/>';
+const SLASH = '<path d="M3 3l18 18"/>';
+
+function renderTop(){
+  const video = MODES[st.mode].video;
+  const fb = $('#bFlash');
+  fb.classList.toggle('dim', video);
+  fb.innerHTML = svg(
+    S.flash === 'off' ? BOLT + SLASH :
+    S.flash === 'on'  ? BOLT :
+    BOLT + '<text x="16" y="22" font-size="8" fill="#fff" stroke="none" font-weight="700">A</text>'
+  );
+  const lb = $('#bLive');
+  lb.innerHTML = svg('<circle cx="12" cy="12" r="9" stroke-dasharray="2 2.5"/><circle cx="12" cy="12" r="4"/>' + (S.live ? '' : SLASH));
+  $('#bHd').innerHTML = `<b>${S.res === '4k' ? '4K' : 'HD'}</b><small>${S.fps}</small>`;
+  $('#bHd').hidden = !video;
+  lb.hidden = video;
+  fb.hidden = false;
+}
+
+function applyModeUI(){
+  const m = MODES[st.mode];
+  $('#shIn').classList.toggle('vid', !!m.video);
+  renderTop();
+}
+
+function renderModes(){
+  const box = $('#modes');
+  box.innerHTML = '';
+  MODES.forEach((m, i) => {
+    const b = document.createElement('button');
+    b.textContent = m.name;
+    if (i === st.mode) b.className = 'on';
+    b.onclick = () => setMode(i);
+    box.appendChild(b);
+  });
+  const on = box.querySelector('.on');
+  if (on) on.scrollIntoView({inline:'center', block:'nearest'});
+}
+
+function setMode(i){
+  if (st.recording || i === st.mode || i < 0 || i >= MODES.length) return;
+  st.mode = i;
+  renderModes();
+  applyModeUI();
+}
+
+function renderZoom(){
+  const z = $('#zoom');
+  z.innerHTML = '';
+  [[0.5,'.5'],[1,'1×'],[2,'2'],[3,'3']].forEach(([v, label]) => {
+    const b = document.createElement('button');
+    b.className = 'zb' + (v === st.zoom ? ' on' : '');
+    b.textContent = v === st.zoom ? (v === 1 ? '1×' : v + '×') : label;
+    if (v === 0.5) { b.disabled = true; b.title = '웹에서는 초광각 렌즈를 사용할 수 없음'; }
+    b.onclick = () => { st.zoom = v; renderZoom(); applyVisual(); };
+    z.appendChild(b);
+  });
+}
+
+/* ---------- 레이아웃 / 필터 / 확대 ---------- */
+function layout(){
+  const vf = $('#vf'), box = $('#box');
+  const W = vf.clientWidth, H = vf.clientHeight;
+  const r = RATIOS[S.ratio];
+  let w = W, h = H;
+  if (r) {
+    if (W / H > r) { h = H; w = H * r; }
+    else { w = W; h = W / r; }
+  }
+  box.style.width = w + 'px';
+  box.style.height = h + 'px';
+}
+
+function applyVisual(){
+  const f = `brightness(${(1 + S.exp * 0.15).toFixed(2)}) ${FILTERS[S.filter]}`;
+  const v = $('#vid'), u = $('#up');
+  v.style.filter = f;
+  u.style.filter = f;
+  v.style.transform = `scale(${st.zoom * (S.facing === 'user' ? -1 : 1)}, ${st.zoom})`;
+  u.style.transform = `scale(${st.zoom})`;
+  layout();
+}
+
+/* ---------- 카메라 ---------- */
+function currentSource(){
+  const up = $('#up');
+  if (!up.hidden && up.naturalWidth) return up;
+  const v = $('#vid');
+  if (st.stream && v.readyState >= 2) return v;
+  return null;
+}
+
+function snapshot(maxW = 1600){
+  const src = currentSource();
+  if (!src) return null;
+  const sw = src.videoWidth || src.naturalWidth;
+  const sh = src.videoHeight || src.naturalHeight;
+  if (!sw || !sh) return null;
+  const vf = $('#vf');
+  const r = RATIOS[S.ratio] ?? (vf.clientWidth / vf.clientHeight);
+  let cw = sw, ch = sh;
+  if (sw / sh > r) cw = sh * r; else ch = sw / r;
+  cw /= st.zoom; ch /= st.zoom;
+  const sx = (sw - cw) / 2, sy = (sh - ch) / 2;
+  const k = Math.min(1, maxW / cw);
+  const c = document.createElement('canvas');
+  c.width = Math.round(cw * k);
+  c.height = Math.round(ch * k);
+  const x = c.getContext('2d');
+  x.filter = `brightness(${(1 + S.exp * 0.15).toFixed(2)}) ${FILTERS[S.filter]}`;
+  x.drawImage(src, sx, sy, cw, ch, 0, 0, c.width, c.height);
+  x.filter = 'none';
+  return c;
+}
+
+async function startCam(){
+  stopStream();
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return noCam();
+  const [w, h] = S.res === '4k' ? [3840, 2160] : [1920, 1080];
+  const tries = [
+    {video:{facingMode:{ideal:S.facing}, width:{ideal:w}, height:{ideal:h}, frameRate:{ideal:S.fps}}, audio:false},
+    {video:{facingMode:S.facing}, audio:false}
+  ];
+  for (const c of tries) {
+    try {
+      st.stream = await navigator.mediaDevices.getUserMedia(c);
+      const v = $('#vid');
+      v.srcObject = st.stream;
+      await v.play().catch(() => {});
+      $('#nocam').hidden = true;
+      applyVisual();
+      return;
+    } catch (e) {}
+  }
+  noCam();
+}
+
+function stopStream(){
+  if (st.stream) { st.stream.getTracks().forEach(t => t.stop()); st.stream = null; }
+  $('#vid').srcObject = null;
+}
+
+function noCam(){
+  $('#nocam').hidden = !$('#up').hidden;
+  applyVisual();
+}
+
+async function setTorch(on){
+  const track = st.stream && st.stream.getVideoTracks()[0];
+  if (!track || !track.getCapabilities || !track.getCapabilities().torch) return;
+  try { await track.applyConstraints({advanced:[{torch:on}]}); } catch (e) {}
+}
+
+/* ---------- 촬영 ---------- */
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove('on'), 1400);
+}
+
+function flashFx(){
+  const f = $('#flashfx');
+  f.classList.remove('go');
+  void f.offsetWidth;
+  f.classList.add('go');
+}
+
+async function countdown(sec){
+  const cd = $('#cd');
+  for (let i = sec; i > 0; i--) { cd.textContent = i; await sleep(1000); }
+  cd.textContent = '';
+}
+
+function addItem(item){
+  item.t = Date.now();
+  st.items.unshift(item);
+  persistPhotos();
+  renderThumb();
+}
+
+function renderThumb(){
+  const it = st.items[0];
+  const img = $('#thumbImg');
+  const p = it ? (it.kind === 'photo' ? it.src : it.poster) : null;
+  if (p) { img.src = p; img.hidden = false; }
+  else { img.hidden = true; img.removeAttribute('src'); }
+}
+
+async function shutter(){
+  if (st.busy) return;
+  if (MODES[st.mode].video) { st.recording ? stopRec() : startRec(); return; }
+  st.busy = true;
+  try {
+    if (S.timer) await countdown(S.timer);
+    const flashOn = S.flash === 'on';
+    if (flashOn) await setTorch(true);
+    const still = snapshot(1600);
+    flashFx();
+    if (!still) { toast('카메라 이미지가 없습니다'); return; }
+    let frames = null;
+    if (S.live) {
+      frames = [still.toDataURL('image/jpeg', .8)];
+      for (let i = 0; i < 11; i++) {
+        const f = snapshot(640);
+        if (f) frames.push(f.toDataURL('image/jpeg', .8));
+        await sleep(100);
+      }
+    }
+    if (flashOn) await setTorch(false);
+    addItem({kind:'photo', src:still.toDataURL('image/jpeg', .9), frames});
+    toast(S.live ? 'Live 사진 저장됨' : '사진 저장됨');
+  } finally {
+    st.busy = false;
+  }
+}
+
+function posterNow(){
+  const c = snapshot(480);
+  return c ? c.toDataURL('image/jpeg', .8) : null;
+}
+
+function updRec(){
+  const s = Math.floor((Date.now() - st.recStart) / 1000);
+  $('#rtime').textContent = `${String(Math.floor(s / 60)).padStart(2,'0')}:${String(s % 60).padStart(2,'0')}`;
+}
+
+async function startRec(){
+  if (!st.stream) return toast('카메라가 필요합니다');
+  st.recording = true;
+  $('#shIn').classList.add('rec');
+  $('#rec').hidden = false;
+  $('#modes').style.pointerEvents = 'none';
+  let stream = st.stream;
+  try {
+    st.recAudio = await navigator.mediaDevices.getUserMedia({audio:true});
+    stream = new MediaStream([...st.stream.getVideoTracks(), ...st.recAudio.getAudioTracks()]);
+  } catch (e) { st.recAudio = null; }
+
+  const stopAudio = () => { if (st.recAudio) st.recAudio.getTracks().forEach(t => t.stop()); st.recAudio = null; };
+  if (window.MediaRecorder) {
+    const type = ['video/mp4','video/webm;codecs=vp9','video/webm'].find(t => MediaRecorder.isTypeSupported(t));
+    st.chunks = [];
+    st.rec = new MediaRecorder(stream, type ? {mimeType:type} : {});
+    st.rec.ondataavailable = e => { if (e.data.size) st.chunks.push(e.data); };
+    st.rec.onstop = () => {
+      const blob = new Blob(st.chunks, {type: st.rec.mimeType});
+      stopAudio();
+      addItem({kind:'video', src:URL.createObjectURL(blob), poster:posterNow()});
+      toast('영상 저장됨');
+    };
+    st.rec.start(250);
+  } else {
+    // MediaRecorder 미지원 환경: 녹화 타이머만 동작하고 영상 파일은 만들지 않음
+    st.rec = {stop(){ stopAudio(); addItem({kind:'video', src:null, poster:posterNow(), sim:true}); toast('시뮬레이션 녹화 저장됨'); }};
+  }
+  st.recStart = Date.now();
+  updRec();
+  st.recTimer = setInterval(updRec, 250);
+}
+
+function stopRec(){
+  st.recording = false;
+  clearInterval(st.recTimer);
+  $('#shIn').classList.remove('rec');
+  $('#rec').hidden = true;
+  $('#modes').style.pointerEvents = '';
+  try { st.rec.stop(); } catch (e) {}
+}
+
+/* ---------- 사진 미리보기 ---------- */
+let pvIdx = 0, frameTimer = null;
+function openPv(i){
+  const it = st.items[i];
+  if (!it) return;
+  pvIdx = i;
+  clearInterval(frameTimer);
+  const body = $('#pvBody');
+  body.innerHTML = '';
+  if (it.kind === 'photo') {
+    const im = new Image();
+    im.src = it.frames ? it.frames[0] : it.src;
+    body.appendChild(im);
+    if (it.frames) {
+      let k = 0;
+      frameTimer = setInterval(() => { k = (k + 1) % it.frames.length; im.src = it.frames[k]; }, 100);
+      const b = document.createElement('div');
+      b.className = 'badge'; b.textContent = 'LIVE';
+      body.appendChild(b);
+    }
+  } else if (it.src) {
+    const v = document.createElement('video');
+    v.src = it.src; v.controls = true; v.playsInline = true;
+    body.appendChild(v);
+  } else {
+    const im = new Image();
+    im.src = it.poster;
+    body.appendChild(im);
+    const b = document.createElement('div');
+    b.className = 'badge'; b.textContent = '시뮬레이션 녹화 (영상 파일 없음)';
+    body.appendChild(b);
+  }
+  $('#pv').hidden = false;
+}
+
+function closePv(){
+  clearInterval(frameTimer);
+  $('#pv').hidden = true;
+  $('#pvBody').innerHTML = '';
+}
+
+/* ---------- 옵션 시트 ---------- */
+function renderSheet(){
+  const box = $('#rows');
+  box.innerHTML = '';
+  ROWS.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    const lab = document.createElement('label');
+    lab.textContent = r.label;
+    row.appendChild(lab);
+    if (r.type === 'range') {
+      const i = document.createElement('input');
+      i.type = 'range'; i.min = r.min; i.max = r.max; i.step = r.step; i.value = S[r.key];
+      i.oninput = () => setS(r.key, parseFloat(i.value), false);
+      row.appendChild(i);
+    } else {
+      const seg = document.createElement('div');
+      seg.className = 'seg';
+      r.opts.forEach(([v, t]) => {
+        const b = document.createElement('button');
+        b.textContent = t;
+        if (S[r.key] === v) b.className = 'on';
+        b.onclick = () => setS(r.key, v);
+        seg.appendChild(b);
+      });
+      row.appendChild(seg);
+    }
+    box.appendChild(row);
+  });
+}
+
+function setS(k, v, rerender = true){
+  S[k] = v;
+  saveSettings();
+  if (['res','fps','facing'].includes(k)) startCam();
+  renderTop();
+  applyVisual();
+  if (rerender) renderSheet();
+}
+
+function openSheet(){ renderSheet(); $('#sheet').classList.add('open'); }
+function closeSheet(){ $('#sheet').classList.remove('open'); }
+
+/* ---------- 이벤트 ---------- */
+$('#shutter').onclick = shutter;
+$('#bMore').onclick = openSheet;
+$('#bHd').onclick = openSheet;
+$('#shade').onclick = closeSheet;
+$('#sUp').onclick = () => $('#file').click();
+$('#nocamUp').onclick = () => $('#file').click();
+$('#sCam').onclick = () => {
+  const up = $('#up');
+  up.hidden = true; up.removeAttribute('src');
+  closeSheet();
+  startCam();
+};
+$('#file').onchange = e => {
+  const f = e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  const up = $('#up');
+  up.onload = () => {
+    up.hidden = false;
+    $('#nocam').hidden = true;
+    closeSheet();
+    applyVisual();
+  };
+  up.src = url;
+};
+$('#bFlash').onclick = () => {
+  if (MODES[st.mode].video) return;
+  const next = {auto:'on', on:'off', off:'auto'}[S.flash];
+  setS('flash', next, false);
+};
+$('#bLive').onclick = () => { setS('live', !S.live, false); };
+$('#bFlip').onclick = () => setS('facing', S.facing === 'user' ? 'environment' : 'user');
+$('#thumb').onclick = () => { if (st.items.length) openPv(0); };
+$('#pvClose').onclick = closePv;
+$('#pvDel').onclick = () => {
+  st.items.splice(pvIdx, 1);
+  persistPhotos();
+  renderThumb();
+  closePv();
+};
+
+/* 모드 스와이프 */
+let sx = 0, sy = 0;
+$('#vf').addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive:true});
+$('#vf').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - sx;
+  const dy = e.changedTouches[0].clientY - sy;
+  if (Math.abs(dx) > 60 && Math.abs(dy) < 60) setMode(st.mode + (dx < 0 ? 1 : -1));
+}, {passive:true});
+
+/* 더블탭 확대 및 기타 줌 방지 (입력 요소 제외) */
+let lastTap = 0;
+document.addEventListener('touchend', e => {
+  const now = Date.now();
+  if (now - lastTap < 300 && !e.target.closest('button,input')) e.preventDefault();
+  lastTap = now;
+}, {passive:false});
+document.addEventListener('dblclick', e => e.preventDefault());
+document.addEventListener('gesturestart', e => e.preventDefault());
+document.addEventListener('contextmenu', e => e.preventDefault());
+window.addEventListener('resize', layout);
+
+/* ---------- 초기화 ---------- */
+st.items = loadPhotos();
+renderModes();
+applyModeUI();
+renderZoom();
+renderTop();
+renderThumb();
+layout();
+startCam();
+</script>
+</body>
+</html>
