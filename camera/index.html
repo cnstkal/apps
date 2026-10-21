@@ -14,7 +14,7 @@ input{font-size:16px}
 [hidden]{display:none!important}
 
 #app{position:fixed;inset:0;max-width:430px;margin:0 auto;background:#000;overflow:hidden}
-#vf{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden}
+#vf{position:absolute;top:0;left:0;right:0;bottom:201px;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden}
 #box{position:relative;overflow:hidden;background:#111}
 #vid,#up{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:center}
 #up{z-index:1}
@@ -40,29 +40,29 @@ input{font-size:16px}
 #flashfx{position:absolute;inset:0;z-index:25;background:#fff;opacity:0;pointer-events:none}
 #flashfx.go{animation:fx .25s ease-out}
 @keyframes fx{0%{opacity:.85}100%{opacity:0}}
-#toast{position:absolute;left:50%;bottom:262px;transform:translateX(-50%);z-index:40;background:rgba(0,0,0,.6);padding:8px 14px;border-radius:14px;font-size:14px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast{position:absolute;left:50%;bottom:280px;transform:translateX(-50%);z-index:40;background:rgba(0,0,0,.6);padding:8px 14px;border-radius:14px;font-size:14px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
 #toast.on{opacity:1}
 
-#bottom{position:absolute;left:0;right:0;bottom:0;z-index:15;padding:40px 0 calc(env(safe-area-inset-bottom,0px) + 22px);background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.45))}
-#zoom{display:flex;justify-content:center;gap:6px;margin-bottom:12px}
+#bottom{position:absolute;left:0;right:0;bottom:0;z-index:15;height:201px;background:#000}
+#zoom{position:absolute;left:0;right:0;bottom:calc(100% + 14px);display:flex;justify-content:center;gap:6px}
 .zb{width:44px;height:44px;border-radius:50%;border:0;background:none;color:#fff;font-size:15px;font-weight:600}
 .zb.on{background:rgba(60,60,60,.75);color:#ffd60a;font-size:17px}
 .zb:disabled{opacity:.35}
-#mid{position:relative;height:84px;margin-bottom:14px}
-#shutter{position:absolute;left:50%;top:0;transform:translateX(-50%);width:84px;height:84px;border-radius:50%;border:3px solid rgba(255,255,255,.55);background:none;padding:0;display:flex;align-items:center;justify-content:center}
-#shIn{width:70px;height:70px;border-radius:50%;background:#fff;transition:all .2s}
+#mid{position:relative;height:80px;margin-top:7px;margin-bottom:32px}
+#shutter{position:absolute;left:50%;top:0;transform:translateX(-50%);width:80px;height:80px;border-radius:50%;border:0;padding:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#a9a9a9 0%,#3a3a3a 45%,#1c1c1c 60%,#7d7d7d 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+#shIn{width:68px;height:68px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px #080808;transition:all .2s}
 #shIn.vid{background:#ef4b45}
-#shIn.rec{width:34px;height:34px;border-radius:9px}
-#bMore{position:absolute;right:24px;top:13px;width:58px;height:58px;border-radius:50%;border:0;background:rgba(50,50,50,.7);display:flex;align-items:center;justify-content:center}
-#foot{display:flex;align-items:center;gap:10px;padding:0 16px}
-#thumb{width:56px;height:56px;flex:none;border-radius:50%;border:2px solid rgba(255,255,255,.2);overflow:hidden;background:#222;padding:0}
+#shIn.rec{width:32px;height:32px;border-radius:8px}
+#bMore{position:absolute;right:34px;top:16px;width:48px;height:48px;border-radius:50%;border:0;background:#202022;display:flex;align-items:center;justify-content:center}
+#foot{display:flex;align-items:center;justify-content:space-between;padding:0 34px}
+#thumb{width:48px;height:48px;flex:none;border-radius:50%;border:2px solid #444;overflow:hidden;background:#202022;padding:0}
 #thumb img{width:100%;height:100%;object-fit:cover;display:block}
-#modes{flex:1;min-width:0;display:flex;overflow-x:auto;gap:2px;padding:5px;border-radius:30px;background:rgba(40,40,40,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);scrollbar-width:none;scroll-snap-type:x mandatory}
-#modes::-webkit-scrollbar{display:none}
-#modes button{flex:none;height:40px;padding:0 14px;border:0;border-radius:20px;background:none;color:#fff;font-size:15px;font-weight:500;scroll-snap-align:center}
-#modes button.on{background:rgba(255,255,255,.16);color:#ffd60a;font-weight:600}
-.circ{width:56px;height:56px;flex:none;border-radius:50%;border:0;background:rgba(50,50,50,.7);display:flex;align-items:center;justify-content:center}
+#modes{display:flex;gap:0;padding:4px;height:48px;border-radius:24px;background:#151516}
+#modes button{flex:none;height:40px;padding:0 17px;border:0;border-radius:20px;background:none;color:#fff;font-size:17px;font-weight:500}
+#modes button.on{background:linear-gradient(#232324,#141415);color:#ffd60a;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),inset 0 1px 1px rgba(255,255,255,.28)}
+.circ{width:48px;height:48px;flex:none;border-radius:50%;border:0;background:#202022;display:flex;align-items:center;justify-content:center}
 .circ svg{width:24px;height:24px}
+#home{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:140px;height:5px;border-radius:3px;background:#fff;pointer-events:none}
 
 #sheet{position:fixed;inset:0;z-index:60;display:none}
 #sheet.open{display:block}
@@ -120,6 +120,7 @@ input[type=range]{width:100%;accent-color:#ffd60a}
       <div id="modes"></div>
       <button id="bFlip" class="circ" aria-label="카메라 전환"></button>
     </div>
+    <div id="home"></div>
   </div>
 
   <div id="sheet">
@@ -216,9 +217,7 @@ function renderModes(){
     b.onclick = () => setMode(i);
     box.appendChild(b);
   });
-  const on = box.querySelector('.on');
-  if (on) on.scrollIntoView({inline:'center', block:'nearest'});
-}
+  }
 
 function setMode(i){
   if (st.recording || i === st.mode || i < 0 || i >= MODES.length) return;
@@ -601,6 +600,8 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 window.addEventListener('resize', layout);
 
 /* ---------- 초기화 ---------- */
+$('#bMore').innerHTML = '<svg width="26" height="20" viewBox="0 0 26 20" fill="#fff">' + [4,13,22].map(x=>`<circle cx="${x}" cy="4" r="3"/><circle cx="${x}" cy="15" r="3"/>`).join('') + '</svg>';
+$('#bFlip').innerHTML = svg('<path d="M20 11a8 8 0 0 0-14-4"/><path d="M5.5 3.5v4h4"/><path d="M4 13a8 8 0 0 0 14 4"/><path d="M18.5 20.5v-4h-4"/>');
 st.items = loadPhotos();
 renderModes();
 applyModeUI();
