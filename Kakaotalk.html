@@ -76,6 +76,24 @@ input,textarea,select{font:inherit;font-size:16px}
 .srch{margin:0 20px 8px;padding:11px 14px;border-radius:12px;background:var(--chip);border:0;width:calc(100% - 40px);outline:0}
 .toast{position:absolute;left:50%;bottom:90px;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;z-index:50}
 .empty{text-align:center;color:var(--g);padding:40px}
+.hdr{padding-top:calc(env(safe-area-inset-top,0px) + 18px);gap:20px}.hdr h1{font-size:30px;letter-spacing:-.5px}.hdr .nm{font-size:22px}.hdr .ic{width:28px;height:28px;stroke-width:1.9}
+.chips{padding:8px 20px 12px;gap:10px}.chip{height:46px;padding:0 24px;border-radius:23px;font-size:18px;color:#666}.chip.on{color:#fff}
+.bd{background:#e8531f;font-size:14px;height:26px;line-height:26px;padding:0 9px;border-radius:13px;color:#fff}
+.ad{border-radius:22px;padding:30px 28px}.ad b{font-size:18px;letter-spacing:-.3px}.ad small{font-size:15px;display:block;margin-top:2px}.ad .em{display:flex;gap:2px;align-items:center;font-size:34px}.gc{background:#7fdc9a;border-radius:50%;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;font-size:26px}
+.row{gap:16px;padding:10px 20px;min-height:76px}.row .t1{font-size:18px;font-weight:500}.row .t2{font-size:16px;line-height:1.35}.row .rt{font-size:14px}
+.sec{font-size:16px;padding:20px 20px 10px;border-top:1px solid #f0f0f0}
+.tabs{border-top:0;padding-top:6px}.tabs svg{width:30px;height:30px}
+.rh{border-bottom:1px solid rgba(0,0,0,.08);padding-bottom:12px}.pill{height:46px;border-radius:23px;box-shadow:0 1px 2px rgba(0,0,0,.05)}.rh .ttl{font-size:18px}
+#msgs{padding:12px 14px}
+.b{font-size:17px;padding:10px 15px;border-radius:20px;position:relative;overflow:visible;line-height:1.35}.b.im{overflow:hidden}
+.m.first .b:not(.im):not(.big)::before{content:"";position:absolute;top:0;left:-9px;width:10px;height:15px;background:inherit;clip-path:polygon(0 0,100% 0,100% 100%)}
+.m.me.first .b:not(.im):not(.big)::before{left:auto;right:-9px;clip-path:polygon(0 0,100% 0,0 100%)}
+.m.first:not(.me) .b:not(.im):not(.big){border-top-left-radius:0}
+.m.me.first .b:not(.im):not(.big){border-top-right-radius:0}
+.who{font-size:13.5px;color:#3c4a57;margin:14px 0 4px 50px}.meta{font-size:12px;color:#4b5967}
+.ib{box-shadow:0 1px 3px rgba(0,0,0,.05);padding:7px 10px}.ib textarea::placeholder{color:#9a9ca1}
+.grid div{position:relative}.grid em{position:absolute;left:14px;bottom:12px;font-style:normal;font-size:15px;color:#fff}
+.pin2 h2{font-size:30px}.acts button{font-size:18px;padding:18px}.acts .ic{stroke:#fff;width:22px;height:22px;vertical-align:middle;margin-right:6px}
 </style></head><body><div id="app"></div>
 <script>
 const K='kk_sim_v1',$=s=>document.querySelector(s),app=$('#app');
@@ -121,14 +139,14 @@ function roomAv(r){if(r.photo)return av(r.photo);if(r.grp)return`<div class="av 
 /* render */
 function render(){
 const fr=V.tab=='f';
-app.innerHTML=`${fr?`<div class="hdr">${av(S.me.photo,'','width:40px;height:40px')}<div class="nm" data-a="prof" data-id="me">${esc(S.me.name)}</div><button data-a="fs">${ic('search')}</button><button data-a="addF">${ic('add')}</button><button data-a="gift">${ic('gift')}</button><button data-a="set">${ic('gear')}</button></div>
+app.innerHTML=`${fr?`<div class="hdr">${av(S.me.photo,'','width:50px;height:50px')}<div class="nm" data-a="prof" data-id="me">${esc(S.me.name)}</div><button data-a="fs">${ic('search')}</button><button data-a="addF">${ic('add')}</button><button data-a="gift">${ic('gift')}</button><button data-a="set">${ic('gear')}</button></div>
 <div class="chips"><span class="chip on">친구</span><span class="chip">소식</span></div>`:`<div class="hdr"><h1>채팅</h1><button data-a="cs">${ic('search')}</button><button data-a="newC">${ic('newc')}</button><button data-a="set">${ic('gear')}</button></div>
 <div class="chips">${[['all','전체'],['un','안읽음'],['pin','고정'],['mute','알림 끔']].map(([k,l])=>`<button class="chip ${V.flt==k?'on':''}" data-a="flt" data-k="${k}">${l}${k=='un'?`<span class="bd">${totalUnread()}</span>`:''}</button>`).join('')}</div>`}
 <div id="main">${fr?friends():chats()}</div>
 <div class="tabs">${['f','c','o','s','m'].map(k=>`<button class="${V.tab==k?'on':''}" ${'fc'.includes(k)?`data-a="tab" data-k="${k}"`:''}><svg viewBox="0 0 24 24">${TAB[k]}</svg>${k=='c'&&totalUnread()?`<span class="bd">${totalUnread()}</span>`:''}${k=='m'?'<i class="dot"></i>':''}</button>`).join('')}</div>
 ${V.room?roomView():''}${V.prof?profView():''}${V.sheet||''}`;
 const m=$('#msgs');if(m&&V.st!==undefined){m.scrollTop=V.st}else if(m)m.scrollTop=m.scrollHeight}
-const AD=`<div class="ad"><div><b>오늘의 카카오가 궁금하다면?</b><small>카카오소식 보러가기</small></div><span class="em">🎧📣</span><i>AD</i></div>`;
+const AD=`<div class="ad"><div><b>오늘의 카카오가 궁금하다면?</b><small>카카오소식 보러가기</small></div><span class="em"><b class="gc">🎧</b>📣🗓️</span><i>AD</i></div>`;
 function frow(f){return`<div class="row" data-a="prof" data-id="${f.id}">${av(f.photo)}<div class="tx"><div class="t1"><span class="n">${esc(f.name)}</span></div>${f.status?`<div class="t2">${esc(f.status)}</div>`:''}</div></div>`}
 function sec(k,title,n,extra=''){const c=V.grp[k];return`<div class="sec" data-a="grp" data-k="${k}"><span>${title} ${n}</span><span class="sp"></span>${extra}${ic(c?'down':'up')}</div>`}
 function friends(){const q=V.fq.trim(),all=S.friends.filter(f=>!q||f.name.includes(q)||(f.status||'').includes(q));
@@ -137,7 +155,7 @@ h+=AD;const sorted=[...all].sort((a,b)=>V.csort=='ga'?a.name.localeCompare(b.nam
 const bd=all.filter(f=>f.bday),fv=all.filter(f=>f.fav),ai=all.filter(f=>f.ai),rest=sorted.filter(f=>!f.ai);
 const g=(k,t,l)=>sec(k,t,l.length)+(V.grp[k]?'':l.map(frow).join(''));
 h+=g('bd','생일인 친구',bd)+g('fv','즐겨찾는 친구',fv)+g('ai','AI',ai);
-h+=sec('fr','친구',rest.length,`<span class="sg" data-stop><button data-a="srt" data-k="ga" class="${V.csort=='ga'?'on':''}">가나다순</button><button data-a="srt" data-k="ad" class="${V.csort=='ad'?'on':''}">친구추가순</button></span>`)+(V.grp.fr?'':rest.map(frow).join(''));
+h+=sec('fr','친구',rest.length,`<span class="sg" data-stop><button data-a="srt" data-k="ga" class="${V.csort=='ga'?'on':''}">가나다순</button><button data-a="srt" data-k="ad" class="${V.csort=='ad'?'on':''}">친구추가순</button></span>`)+(V.grp.fr?'':(q?'':`<div class="row" style="cursor:default"><div class="av" style="background:#fbeec0;font-size:28px">😊</div><div class="tx"><div class="t1"><span class="n">추천친구 <span style="color:var(--g)">28</span></span></div></div></div><div class="row" style="cursor:default"><div class="av" style="background:#fcebd8;color:#f08a1c;font-weight:800;font-size:20px">Ch</div><div class="tx"><div class="t1"><span class="n">채널 <span style="color:var(--g)">71</span></span></div></div></div>`)+rest.map(frow).join(''));
 return h+(all.length?'':'<div class="empty">친구가 없습니다</div>')+'<div style="height:12px"></div>'}
 function chats(){let l=[...S.rooms];const q=V.q.trim();
 if(q)l=l.filter(r=>r.name.includes(q)||r.msgs.some(m=>(m.text||'').includes(q)));
@@ -166,9 +184,9 @@ ${V.rsq?`<input class="srch" id="rq" type="text" style="margin:8px 12px;width:ca
 <div class="ib"><button data-a="attach">${ic('plus')}</button><textarea id="ti" rows="1" placeholder="메시지 입력"></textarea><button data-a="emo" style="background:#e2e6ee">${ic('smile')}</button><button class="snd" data-a="send">전송</button></div></div></div>`}
 function profView(){const me=V.prof=='me',f=me?{...S.me,id:'me'}:S.friends.find(x=>x.id==V.prof);if(!f){V.prof=null;return''}
 const bg=f.bg?`url(${f.bg})`:'none';
-return`<div class="ov prof"><div class="ph"><button class="rb" data-a="closeP">${ic('x')}</button>${me?`<div style="display:flex;gap:8px"><button class="rb dk" style="width:auto;padding:0 24px;color:#fff;font-size:17px" data-a="editF" data-id="me">프로필 편집</button><button class="rb dk" data-a="pmenu">${ic('dots')}</button></div>`:`<div class="pill" style="gap:18px"><button data-a="editF" data-id="${f.id}">✏️</button><button data-a="fav" data-id="${f.id}">${f.fav?'⭐':'☆'}</button><button data-a="pmenu">${ic('dots')}</button></div>`}</div>
-<div class="pbody"><div class="pbg" style="background-image:${bg}"></div><div class="pin2">${av(f.photo)}<h2>${esc(f.name)}</h2>${f.status?`<p>${esc(f.status)}</p>`:''}<div class="acts"><button data-a="chatW" data-id="${f.id}">💬 ${me?'나와의 채팅':'1:1 채팅'}</button>${me?'':`<button data-a="call">📞 통화</button>`}<button data-a="addPost" data-id="${f.id}">＋ 게시물</button></div></div>
-<div class="grid">${(f.posts||[]).map((p,i)=>`<div style="background-image:url(${p})" data-a="delPost" data-id="${f.id}" data-i="${i}"></div>`).join('')}</div></div></div>`}
+return`<div class="ov prof"><div class="ph"><button class="rb" data-a="closeP">${ic('x')}</button>${me?`<div style="display:flex;gap:8px"><button class="rb dk" style="width:auto;padding:0 24px;color:#fff;font-size:17px" data-a="editF" data-id="me">프로필 편집</button><button class="rb dk" data-a="pmenu">${ic('dots')}</button></div>`:`<div class="pill" style="gap:18px"><button data-a="gift">${ic('gift')}</button><button data-a="pmenu">${ic('dots')}</button></div>`}</div>
+<div class="pbody"><div class="pbg" style="background-image:${bg}"></div><div class="pin2">${av(f.photo)}<h2>${esc(f.name)}</h2>${f.status?`<p>${esc(f.status)}</p>`:''}<div class="acts"><button data-a="chatW" data-id="${f.id}">${ic('chat')}${me?'나와의 채팅':'1:1 채팅'}</button>${me?'':`<button data-a="call">${ic('phone')}통화</button>`}<button data-a="addPost" data-id="${f.id}">＋ 게시물</button></div></div>
+<div class="grid">${(f.posts||[]).map((p,i)=>`<div style="background-image:url(${p})" data-a="delPost" data-id="${f.id}" data-i="${i}">${me?'<em>나만 보기</em>':''}</div>`).join('')}</div></div></div>`}
 /* modal/forms */
 function sheet(h){V.sheet=`<div class="sheet" data-a="shClose"><div class="card" data-stop>${h}</div></div>`;render()}
 const closeSheet=()=>{V.sheet=null;render()};
@@ -189,7 +207,7 @@ gift:()=>toast('선물하기는 지원하지 않습니다'),call:()=>toast('통�
 addF:()=>form('친구 추가',[{k:'name',l:'이름',v:''},{k:'status',l:'상태 메시지',v:''},{k:'photo',l:'프로필 사진',t:'file'},{k:'fav',l:'즐겨찾기',t:'check'},{k:'bday',l:'생일인 친구',t:'check'}],o=>{if(!o.name.trim())return toast('이름을 입력하세요'),1;S.friends.push({id:id(),posts:[],bg:null,added:Date.now(),...o})}),
 editF:d=>{const me=d.id=='me',f=me?S.me:S.friends.find(x=>x.id==d.id);form(me?'내 프로필 편집':'친구 수정',[{k:'name',l:'이름',v:f.name},{k:'status',l:'상태 메시지',v:f.status},{k:'photo',l:'프로필 사진',t:'file',v:f.photo},{k:'bg',l:'배경 이미지',t:'file',v:f.bg},...(me?[]:[{k:'fav',l:'즐겨찾기',t:'check',v:f.fav},{k:'bday',l:'생일인 친구',t:'check',v:f.bday}])],o=>{Object.assign(f,o)},me?0:()=>{S.friends=S.friends.filter(x=>x!=f);V.prof=null})},
 fav:d=>{const f=S.friends.find(x=>x.id==d.id);f.fav=!f.fav;save();render()},
-pmenu:()=>{const me=V.prof=='me';menu(me?[['프로필 사진 변경',()=>pickImg(p=>{S.me.photo=p;save();render()})],['배경 이미지 변경',()=>pickImg(p=>{S.me.bg=p;save();render()})]]:[['프로필 사진 변경',()=>pickImg(p=>{S.friends.find(x=>x.id==V.prof).photo=p;save();render()})],['배경 이미지 변경',()=>pickImg(p=>{S.friends.find(x=>x.id==V.prof).bg=p;save();render()})],['친구 삭제',()=>{if(confirm('친구를 삭제할까요?')){S.friends=S.friends.filter(x=>x.id!=V.prof);V.prof=null;save();render()}},1]])},
+pmenu:()=>{const me=V.prof=='me';menu(me?[['프로필 사진 변경',()=>pickImg(p=>{S.me.photo=p;save();render()})],['배경 이미지 변경',()=>pickImg(p=>{S.me.bg=p;save();render()})]]:[['정보 수정',()=>A.editF({id:V.prof})],['즐겨찾기 토글',()=>A.fav({id:V.prof})],['프로필 사진 변경',()=>pickImg(p=>{S.friends.find(x=>x.id==V.prof).photo=p;save();render()})],['배경 이미지 변경',()=>pickImg(p=>{S.friends.find(x=>x.id==V.prof).bg=p;save();render()})],['친구 삭제',()=>{if(confirm('친구를 삭제할까요?')){S.friends=S.friends.filter(x=>x.id!=V.prof);V.prof=null;save();render()}},1]])},
 addPost:d=>pickImg(p=>{(d.id=='me'?S.me:S.friends.find(x=>x.id==d.id)).posts.push(p);save();render()}),
 delPost:d=>{if(confirm('게시물 사진을 삭제할까요?')){(d.id=='me'?S.me:S.friends.find(x=>x.id==d.id)).posts.splice(+d.i,1);save();render()}},
 prof:d=>{V.prof=d.id;render()},closeP:()=>{V.prof=null;render()},
