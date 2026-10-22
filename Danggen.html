@@ -1,0 +1,314 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>당근 앱</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: full-height phone shell = header + scroll body + floating pill tab bar */
+:root{--bg:#fff;--bg2:#f4f5f7;--card:#fff;--fg:#1a1c20;--fg2:#868b94;--fg3:#b6b9c0;--line:#eceef1;--brand:#ff6f0f;--soft:#fff1e8;--chip:#f2f3f6;--on:#272d37;--onfg:#fff;--bub:#ec6f2e;--bubo:#f1f2f4;--ph:#f4f5f7;--phi:#dcdde2;--tab:#fff;--tabon:#eceef1;--red:#e5484d;--font:"Apple SD Gothic Neo","Noto Sans KR",-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111214;--bg2:#0b0c0d;--card:#1b1d21;--fg:#f1f2f4;--fg2:#9a9ea7;--fg3:#666a73;--line:#2a2d33;--soft:#3a2417;--chip:#24272c;--on:#f1f2f4;--onfg:#1a1c20;--bubo:#25282d;--ph:#1f2125;--phi:#3a3d44;--tab:#1b1d21;--tabon:#2c2f35;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111214;--bg2:#0b0c0d;--card:#1b1d21;--fg:#f1f2f4;--fg2:#9a9ea7;--fg3:#666a73;--line:#2a2d33;--soft:#3a2417;--chip:#24272c;--on:#f1f2f4;--onfg:#1a1c20;--bubo:#25282d;--ph:#1f2125;--phi:#3a3d44;--tab:#1b1d21;--tabon:#2c2f35;color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;overflow:hidden;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box}button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}input,textarea,select{font:inherit;color:inherit}
+svg{display:block}
+#app{height:100%;display:flex;flex-direction:column;position:relative;background:var(--bg)}
+#view{flex:1;min-height:0;display:flex;flex-direction:column;position:relative}
+.scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.g{background:var(--bg2)}
+:root{--gl:max(16px,env(safe-area-inset-left,0px));--gr:max(16px,env(safe-area-inset-right,0px))}
+.pad{padding-left:var(--gl);padding-right:var(--gr)}
+.hd{display:flex;align-items:center;height:56px;flex:none;padding-left:var(--gl);padding-right:var(--gr);gap:4px}
+.hd h2{flex:1;margin:0;text-align:center;font-size:20px;font-weight:700}
+.hd .ic{width:36px;height:36px;display:grid;place-items:center}
+.hd .ic svg{width:26px;height:26px}
+.hd .tx{font-size:18px;font-weight:500;min-width:36px;text-align:right}
+.hd .big{flex:1;text-align:left;font-size:24px;font-weight:700;margin:0}
+.loc{flex:1;display:flex;align-items:center;gap:4px;font-size:22px;font-weight:700;min-width:0;white-space:nowrap}
+.loc small{font-size:22px;color:var(--fg3);font-weight:700;overflow:hidden;text-overflow:ellipsis;margin-left:4px}
+.dot{position:relative}.dot:after{content:"";position:absolute;right:5px;top:3px;width:8px;height:8px;border-radius:50%;background:var(--brand)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px var(--gr) 12px var(--gl);flex:none;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;height:40px;padding:0 16px;border-radius:20px;background:var(--chip);font-size:15px;display:flex;align-items:center;gap:4px}
+.chip.on{background:var(--on);color:var(--onfg)}
+.chip svg{width:14px;height:14px}
+.item{display:flex;gap:16px;padding:16px var(--gr) 16px var(--gl);position:relative}
+.item+.item:before{content:"";position:absolute;left:var(--gl);right:var(--gr);top:0;border-top:1px solid var(--line)}
+.th{width:128px;height:128px;flex:none;border-radius:10px;border:1px solid var(--line);overflow:hidden;background:var(--ph);display:grid;place-items:center}
+.th img{width:100%;height:100%;object-fit:cover}
+.th svg{width:64%;height:64%;color:var(--phi)}
+.ib{flex:1;min-width:0;position:relative;min-height:128px}
+.it{display:flex;gap:8px;align-items:flex-start;font-size:17px;line-height:1.4;padding-right:0}
+.it span{flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all}
+.mb{width:24px;height:24px;flex:none;color:var(--fg);display:grid;place-items:center}
+.mb svg{width:20px;height:20px}
+.meta{font-size:14px;color:var(--fg2);margin-top:2px}
+.price{font-size:17px;font-weight:700;margin-top:4px;display:flex;align-items:center;gap:4px}
+.price svg{width:20px;height:20px;color:#f5a14a}
+.bd{display:inline-flex;align-items:center;gap:3px;color:var(--brand);font-weight:700;font-size:13px;background:var(--soft);padding:3px 7px;border-radius:5px;margin-top:6px}
+.cnt{position:absolute;right:0;bottom:0;display:flex;gap:6px;color:var(--fg2);font-size:17px;align-items:center}
+.cnt span{display:flex;align-items:center;gap:2px}.cnt svg{width:19px;height:19px;color:var(--fg3)}
+.fab{position:absolute;right:var(--gr);bottom:16px;height:48px;padding:0 20px 0 16px;border-radius:24px;background:var(--brand);color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.fab svg{width:22px;height:22px}
+#tabs{flex:none;margin:6px max(14px,env(safe-area-inset-right,0px)) 8px max(14px,env(safe-area-inset-left,0px));height:64px;border:1px solid var(--line);border-radius:32px;background:var(--tab);display:flex;padding:5px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;border-radius:27px;position:relative;user-select:none}
+.tab svg{width:26px;height:26px}
+.tab.on{background:var(--tabon);flex:1.15}
+.tab.dis{pointer-events:none;cursor:default}
+.tab .bg{position:absolute;top:2px;left:55%;min-width:22px;height:22px;border-radius:11px;background:var(--brand);color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center;padding:0 5px}
+.pan{background:var(--card);border-radius:24px;margin:0 var(--gr) 12px var(--gl);padding:16px}
+.prof{display:flex;align-items:center;gap:16px;font-size:24px;font-weight:700}
+.av{width:48px;height:48px;border-radius:50%;background:#cfd1d6;overflow:hidden;flex:none;display:grid;place-items:end center}
+.av svg{width:100%;height:100%;color:#fff}
+.tp{display:inline-block;background:var(--soft);color:#e8691f;font-size:16px;font-weight:700;padding:5px 12px;border-radius:14px}
+.pay1{display:flex;align-items:center;gap:20px;font-size:20px}
+.payl{color:var(--brand);font-weight:700;font-size:22px;display:flex;align-items:center;gap:2px}
+.pay1 .sp{width:1px;height:20px;background:var(--line)}
+.paybtn{margin-left:auto;background:var(--on);color:var(--onfg);height:52px;border-radius:26px;padding:0 20px;font-weight:700;font-size:20px;display:flex;align-items:center;gap:6px}
+.paybtn svg{width:22px;height:22px}
+.bal{display:flex;margin-top:14px;background:var(--bg2);border-radius:14px;height:44px;align-items:center;font-size:17px;color:var(--fg2)}
+.bal button{flex:1;display:flex;justify-content:center;align-items:center;gap:6px}.bal b{color:var(--fg)}
+.bal svg{width:16px;height:16px}.bal i{width:1px;height:20px;background:var(--line)}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);row-gap:12px;padding:10px 4px}
+.sg button{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:17px;padding:4px 0}
+.sg svg{width:44px;height:44px}
+.r4{display:grid;grid-template-columns:repeat(4,1fr);padding:14px 0}
+.r4 button{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:17px;position:relative}
+.r4 button+button:before{content:"";position:absolute;left:0;top:6px;height:34px;border-left:1px solid var(--line)}
+.r4 svg{width:32px;height:32px}
+.sec{font-size:20px;font-weight:700;margin:4px 0 10px}
+.row{display:flex;align-items:center;gap:16px;height:56px;font-size:20px;width:100%;text-align:left}
+.row svg:first-child{width:30px;height:30px}.row .ch{margin-left:auto;width:22px;height:22px;color:var(--fg2)}
+.mc{background:var(--card);border-radius:24px;margin:0 var(--gr) 12px var(--gl);padding:16px}
+.mc .h{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:700;margin-bottom:12px}
+.mc .h .st{font-weight:700}.mc .h .bd{margin:0;font-size:16px;background:none;padding:0}.mc .h .mb{margin-left:auto}
+.mc .bd svg{width:20px;height:20px}
+.mb2{display:flex;gap:16px}.mb2 .th{width:108px;height:108px}
+.mb2 .t1{font-size:19px;line-height:1.35}.mb2 .m2{color:var(--fg3);font-size:16px;margin-top:2px}.mb2 .p2{font-size:19px;font-weight:700;margin-top:6px}
+.mb2 .ib{min-height:108px}
+.st2{position:absolute;right:0;bottom:0;display:flex;gap:6px;color:var(--fg2);font-size:17px}.st2 span{display:flex;align-items:center;gap:2px}.st2 svg{width:20px;height:20px;color:var(--fg3)}
+.bump{width:100%;height:56px;border-radius:12px;background:var(--chip);font-size:19px;font-weight:700;margin-top:14px}
+.promo{margin-top:12px;border-radius:16px;background:var(--soft);padding:18px 16px;display:flex;gap:12px;align-items:center;font-size:17px;line-height:1.5}
+.promo svg{width:24px;height:24px;color:var(--brand);flex:none}
+.promo u{cursor:pointer}.promo .x{margin-left:auto;width:32px;height:32px;flex:none}
+.empty{text-align:center;color:var(--fg2);padding:80px 0;font-size:16px}
+.dtop{position:absolute;z-index:5;left:0;right:0;top:0;height:56px;display:flex;align-items:center;padding:0 var(--gr) 0 var(--gl);gap:8px;color:#fff;filter:drop-shadow(0 1px 3px rgba(0,0,0,.45));transition:background .15s}
+.dtop.solid{background:var(--bg);color:var(--fg);filter:none;border-bottom:1px solid var(--line)}
+.dtop i{flex:1}.dtop button{width:36px;height:36px;display:grid;place-items:center}.dtop svg{width:26px;height:26px}
+.gw{position:relative;background:#8a8d93}
+.gal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;aspect-ratio:1/1;max-height:62vh;width:100%}
+.gal::-webkit-scrollbar{display:none}.gal img{flex:none;width:100%;height:100%;object-fit:cover;scroll-snap-align:center}
+.gc{position:absolute;right:16px;bottom:16px;background:rgba(0,0,0,.55);color:#fff;font-size:15px;padding:6px 14px;border-radius:16px}
+.gn{height:56px}
+.sl{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.sl .av{width:52px;height:52px}.sl b{font-size:18px;display:block}.sl small{color:var(--fg2);font-size:16px}
+.sl .tm{margin-left:auto;text-align:right;color:var(--brand);font-weight:700;font-size:20px}.sl .tm u{display:block;color:var(--fg2);font-weight:400;font-size:15px}
+.dt{font-size:25px;font-weight:700;margin:22px 0 10px;line-height:1.35;word-break:keep-all}
+.dp{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:700}
+.pay{display:inline-flex;align-items:center;gap:2px;color:var(--brand);font-size:17px;font-weight:700}
+.pay:before{content:"";width:9px;height:12px;border-radius:5px;background:var(--brand);display:inline-block}
+.dp a{font-size:17px;font-weight:500;color:var(--brand);text-decoration:underline;cursor:pointer}
+.sub{color:var(--fg2);font-size:16px;margin:14px 0 22px}
+.desc{font-size:18px;line-height:1.65;margin:0 0 20px;word-break:keep-all}
+.pl{display:flex;align-items:center;gap:10px;font-size:18px;margin:6px 0 14px}.pl b{font-weight:700}.pl svg{width:18px;height:18px;margin-left:-4px}
+.map{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/1.1}
+.map svg{width:100%;height:100%}
+.map button{position:absolute;right:12px;bottom:12px;background:#fff;color:#1a1c20;border-radius:20px;height:40px;padding:0 16px;font-size:16px;font-weight:500;box-shadow:0 1px 6px rgba(0,0,0,.15)}
+.stat{color:var(--fg2);font-size:16px;margin:22px 0 18px}
+.rep{color:var(--fg2);font-size:17px;text-decoration:underline;display:inline-block;padding-bottom:28px}
+.info{background:var(--bg2);border-radius:14px;padding:6px 16px;margin:0 0 22px}.info div{display:flex;justify-content:space-between;padding:10px 0;font-size:16px}.info span{color:var(--fg2)}
+.bar{flex:none;display:flex;gap:14px;align-items:center;padding:10px var(--gr) 8px var(--gl);border-top:1px solid var(--line);background:var(--bg)}
+.bar .hb{width:40px;height:40px;display:grid;place-items:center}.bar .hb svg{width:34px;height:34px}.bar .hb.on{color:var(--brand)}.bar .hb.on svg{fill:currentColor}
+.cta{flex:1;height:56px;border-radius:16px;background:#ff6600;color:#fff;font-size:20px;font-weight:700}
+.cta.alt{background:var(--soft);color:var(--brand)}.cta.gr{background:var(--chip);color:var(--fg)}
+.rh{display:flex;align-items:center;padding:0 var(--gr) 0 var(--gl);height:64px;flex:none;gap:6px}
+.rh .c{flex:1;text-align:center;min-width:0}.rh b{font-size:21px;font-weight:700}.rh .tp{font-size:15px;padding:3px 10px;margin-left:8px;vertical-align:2px}.rh small{display:block;font-size:16px;color:var(--fg2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.strip{display:flex;align-items:center;gap:12px;padding:10px var(--gr) 10px var(--gl);border-bottom:1px solid var(--line);flex:none}
+.strip .th{width:56px;height:56px;border-radius:6px}.strip b{display:block;font-size:17px;font-weight:500}.strip .gone{color:var(--fg3)}
+.strip .sp{font-size:18px;font-weight:700}
+.msgs{padding:16px var(--gr) 16px var(--gl)}
+.dv{text-align:center;color:var(--fg2);font-size:16px;margin:14px 0 18px}
+.m{display:flex;align-items:flex-end;gap:8px;margin:0 0 8px}.m.me{justify-content:flex-end}
+.m .bb{max-width:70%;padding:12px 18px;border-radius:22px;font-size:18px;line-height:1.45;word-break:break-word;white-space:pre-wrap}
+.m.me .bb{background:var(--bub);color:#fff}.m:not(.me) .bb{background:var(--bubo)}
+.m .tt{font-size:13px;color:var(--fg2);flex:none;padding-bottom:2px}
+.m .av{width:32px;height:32px;align-self:flex-start}
+.ib2{flex:none;display:flex;align-items:center;gap:10px;padding:8px var(--gr) 8px var(--gl);position:relative}
+.ib2 .pl2{width:38px;height:38px;color:var(--fg2);display:grid;place-items:center}.ib2 .pl2 svg{width:30px;height:30px}
+.ib2 .f{flex:1;display:flex;align-items:center;background:var(--chip);border-radius:24px;height:48px;padding:0 14px 0 18px}
+.ib2 input{flex:1;border:0;background:none;outline:0;font-size:18px;min-width:0}.ib2 input::placeholder{color:var(--fg3)}
+.ib2 .f button{width:34px;height:34px;color:var(--fg2)}.ib2 .f svg{width:32px;height:32px}
+.ib2 .sd{width:42px;height:42px;color:var(--fg3);display:grid;place-items:center}.ib2 .sd.on{color:var(--brand)}.ib2 .sd svg{width:34px;height:34px}
+.spk{position:absolute;left:var(--gl);top:-52px;width:50px;height:50px;border-radius:50%;background:var(--bg);box-shadow:0 1px 8px rgba(0,0,0,.15);display:grid;place-items:center;color:var(--brand)}.spk svg{width:26px;height:26px}
+.cr{display:flex;gap:14px;padding:14px var(--gr) 14px var(--gl);align-items:center}
+.cr .av{width:52px;height:52px}.cr .c{flex:1;min-width:0}.cr .n{font-size:17px;font-weight:700}.cr .n small{font-weight:400;color:var(--fg2);font-size:14px;margin-left:4px}
+.cr .l{color:var(--fg);font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.cr .th{width:48px;height:48px;border-radius:8px}.cr .ub{background:var(--brand);color:#fff;font-size:13px;font-weight:700;min-width:22px;height:22px;border-radius:11px;display:grid;place-items:center;padding:0 6px;margin-left:6px}
+.sbar{flex:1;display:flex;align-items:center;gap:8px;background:var(--chip);border-radius:12px;height:44px;padding:0 12px}
+.sbar input{flex:1;border:0;background:none;outline:0;font-size:17px;min-width:0}.sbar svg{width:22px;height:22px;color:var(--fg2)}
+.rc{display:flex;flex-wrap:wrap;gap:8px;padding:0 var(--gr) 16px var(--gl)}
+.rc span{display:flex;align-items:center;gap:6px;height:38px;padding:0 8px 0 14px;border:1px solid var(--line);border-radius:19px;font-size:16px}
+.rc svg{width:16px;height:16px;color:var(--fg2)}
+.lh{display:flex;justify-content:space-between;align-items:center;padding:12px var(--gr) 10px var(--gl);font-size:18px;font-weight:700}
+.lh button{font-size:15px;font-weight:400;color:var(--fg2)}
+.nt{display:flex;gap:14px;padding:16px var(--gr) 16px var(--gl);border-bottom:1px solid var(--line)}
+.nt .ci{width:44px;height:44px;border-radius:50%;background:var(--soft);color:var(--brand);display:grid;place-items:center;flex:none}.nt .ci svg{width:24px;height:24px}
+.nt b{font-size:16px;font-weight:700;display:block;line-height:1.4}.nt p{margin:3px 0;color:var(--fg2);font-size:15px}.nt small{color:var(--fg3);font-size:13px}
+.fm{padding:8px var(--gr) 24px var(--gl)}
+.fm label{display:block;font-size:15px;color:var(--fg2);margin:18px 0 8px}
+.fm .in{width:100%;height:50px;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:0 14px;font-size:17px;outline:0}
+.fm .in:focus{border-color:var(--brand)}
+.fm textarea.in{height:160px;padding:12px 14px;resize:none;line-height:1.5}
+.tg{display:flex;gap:8px}.tg .chip{height:40px}
+.ph{display:flex;gap:10px;overflow-x:auto;padding:2px 0}
+.ph>*{flex:none;width:80px;height:80px;border-radius:12px;position:relative}
+.ph .add{border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--fg2);font-size:13px;gap:2px;cursor:pointer}.ph .add svg{width:26px;height:26px}
+.ph img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+.ph .rm{position:absolute;right:-4px;top:-4px;width:22px;height:22px;border-radius:50%;background:var(--on);color:var(--onfg);display:grid;place-items:center}.ph .rm svg{width:12px;height:12px}
+.ck{display:flex;align-items:center;gap:8px;font-size:17px;margin-top:16px;color:var(--fg)}.ck input{width:20px;height:20px;accent-color:var(--brand)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:flex-end}
+.sh{width:100%;background:var(--card);border-radius:20px 20px 0 0;padding:12px var(--gr) calc(12px + env(safe-area-inset-bottom,0px)) var(--gl)}
+.sht{font-size:17px;text-align:center;padding:16px 0;line-height:1.5;color:var(--fg)}
+.si{display:block;width:100%;text-align:left;font-size:18px;padding:16px 4px}.si.d{color:var(--red)}.si+.si{border-top:1px solid var(--line)}
+#toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:rgba(30,32,36,.92);color:#fff;font-size:15px;padding:12px 20px;border-radius:24px;z-index:60;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+button:focus-visible,input:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+</style>
+<div id="app"><div id="view"></div><nav id="tabs" hidden></nav></div><div id="sheet"></div><div id="toast" hidden></div>
+<script>
+const KEY='dg_app_v1',H=36e5,D=864e5;
+const $=s=>document.querySelector(s);
+const sv=(t,c,c2,sh)=>'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="'+c+'"/>'+(sh==1?'<rect x="110" y="90" width="180" height="200" rx="34" fill="'+c2+'"/>':sh==2?'<rect x="80" y="130" width="240" height="140" rx="12" fill="'+c2+'"/>':'<circle cx="200" cy="190" r="95" fill="'+c2+'"/>')+'<text x="200" y="352" font-size="30" text-anchor="middle" fill="'+c2+'" font-family="sans-serif">'+t+'</text></svg>');
+const I=(()=>{const s=(d,x='')=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"${x}>${d}</svg>`;const f=d=>`<svg viewBox="0 0 24 24" fill="currentColor">${d}</svg>`;return{
+back:s('<path d="M15 4.5L7.5 12 15 19.5"/>'),home:s('<path d="M4 11.5L12 4l8 7.5V19a1 1 0 01-1 1h-4.5v-6h-5v6H5a1 1 0 01-1-1z"/>'),search:s('<circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/>'),bell:s('<path d="M6 16v-5a6 6 0 1112 0v5l1.5 2h-15z"/><path d="M10 21h4"/>'),menu:s('<path d="M3 6h18M3 12h18M3 18h18"/>'),
+pin:f('<path d="M12 2a7 7 0 00-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 00-7-7zm0 9.5A2.5 2.5 0 119.5 9a2.5 2.5 0 012.5 2.5z"/>'),share:s('<path d="M12 15V3.5M8 7l4-4 4 4M5 12v7.5h14V12"/>'),dots:f('<circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/>'),
+phone:s('<path d="M5 4h3.5l1.8 4.6-2.3 1.4a11 11 0 005.9 5.9l1.4-2.3L20 15.5V19a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/>'),heart:s('<path d="M12 20s-8-5-8-11a4.5 4.5 0 018-2.7A4.5 4.5 0 0120 9c0 6-8 11-8 11z"/>'),hf:f('<path d="M12 21s-9-5.5-9-12a5 5 0 019-3 5 5 0 019 3c0 6.500-9 12-9 12z"/>'),
+chat:s('<path d="M12 4c5 0 9 3.200 9 7.500S17 19 12 19c-1 0-2-.1-2.800-.4L4 20.500l1.300-4C4 15.200 3 13.500 3 11.500 3 7.200 7 4 12 4z"/><circle cx="8.500" cy="11.500" r=".6"/><circle cx="12" cy="11.500" r=".6"/><circle cx="15.500" cy="11.500" r=".6"/>'),cb:f('<path d="M12 3C6.500 3 2.500 6.600 2.500 11c0 2 .8 3.700 2.200 5.100L3.800 20l4-1.500c1.300.4 2.700.5 4.200.5 5.500 0 9.500-3.600 9.500-8S17.500 3 12 3z"/>'),
+eye:f('<path d="M12 5C6.500 5 2.500 9 1.500 12c1 3 5 7 10.500 7s9.500-4 10.500-7C21.500 9 17.500 5 12 5zm0 10a3 3 0 110-6 3 3 0 010 6z"/>'),ppl:f('<circle cx="9" cy="8" r="3.500"/><path d="M2 20c0-4 3-6.500 7-6.500s7 2.500 7 6.500z"/><circle cx="17" cy="9" r="2.600"/><path d="M17.500 13.500c3 0 5 2 5 5.500h-4.500c0-2-.5-3.800-1.800-5.200z"/>'),mail:f('<path d="M2 5h20v14H2z"/><path d="M2 5l10 8 10-8" fill="none" stroke="var(--bg)" stroke-width="1.600"/>'),
+user:s('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.500 3.500-7 8-7s8 2.500 8 7z"/>'),userf:f('<circle cx="12" cy="8" r="4.500"/><path d="M3.500 21c0-5 3.500-7.500 8.500-7.500s8.500 2.500 8.500 7.500z"/>'),comm:s('<circle cx="12" cy="6" r="2.800"/><circle cx="5.500" cy="9" r="2.200"/><circle cx="18.500" cy="9" r="2.200"/><path d="M7 20c0-3 2-5 5-5s5 2 5 5zM1.500 17c0-2 1.500-3.500 3.500-3.500M22.500 17c0-2-1.500-3.500-3.500-3.500"/>'),map:s('<path d="M12 21s-6.500-6-6.500-11a6.500 6.500 0 0113 0c0 5-6.500 11-6.500 11z"/><circle cx="12" cy="10" r="2.500"/>'),
+plus:s('<path d="M12 5v14M5 12h14"/>'),x:s('<path d="M6 6l12 12M18 6L6 18"/>'),send:f('<path d="M2.500 3.500l19 8.500-19 8.500 3.500-8.500z"/>'),smile:s('<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r=".7"/><circle cx="15" cy="10" r=".7"/><path d="M8 14.500c1 1.500 2.300 2 4 2s3-.5 4-2"/>'),spark:f('<path d="M10 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM19 2l1 2.500 2.500 1-2.500 1L19 9l-1-2.500-2.500-1L18 4.500z"/>'),
+chev:s('<path d="M9 5l7 7-7 7"/>'),gear:s('<circle cx="12" cy="12" r="3.200"/><path d="M12 2.500l1.600 2.500 2.900-.6.900 2.800 2.800.9-.6 2.900L22 12l-2.500 1.600.6 2.900-2.800.9-.9 2.800-2.900-.6L12 21.500 10.400 19l-2.900.6-.9-2.800-2.800-.9.6-2.900L2 12l2.500-1.600-.6-2.900 2.800-.9.9-2.800 2.900.6z"/>'),
+up:s('<path d="M7 17L17 7M9 7h8v8"/>'),ext:s('<path d="M14 4h6v6M20 4l-8 8M10 5H5v14h14v-5"/>'),scan:s('<path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4M4 12h16"/>'),
+ph:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="10" cy="9" r="3.200"/><path d="M4 18c0-3.500 3-5 6-5s6 1.500 6 5z"/><path d="M17.500 17.500L21 21" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"/><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+dc:s('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),cp:s('<path d="M4 7a2 2 0 012-2h12a2 2 0 012 2v3a2 2 0 000 4v3a2 2 0 01-2 2H6a2 2 0 01-2-2v-3a2 2 0 000-4z"/><path d="M14 6v2M14 11v2M14 16v2"/>'),gm:s('<path d="M7 4h10l4 5-9 11L3 9z"/><path d="M3 9h18M9.500 4L8 9l4 11 4-11-1.500-5"/>'),rc:s('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/>'),
+bag:'<svg viewBox="0 0 48 48"><rect x="9" y="16" width="30" height="24" rx="6" fill="#ee7233"/><path d="M17 16l5-8h10l-3 8z" fill="#f6b95e"/><path d="M19 24v3a5 5 0 0010 0v-3" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+job:'<svg viewBox="0 0 48 48"><circle cx="22" cy="22" r="13" fill="none" stroke="#ee7233" stroke-width="5"/><circle cx="22" cy="19" r="4" fill="#ee7233"/><path d="M14 29a8 6 0 0116 0z" fill="#ee7233"/><path d="M32 32l9 9" stroke="#ee7233" stroke-width="5" stroke-linecap="round"/></svg>',
+hs:'<svg viewBox="0 0 48 48"><path d="M7 22L24 8l17 14v18a2 2 0 01-2 2H9a2 2 0 01-2-2z" fill="#c755c4"/><g fill="#fff"><rect x="17" y="24" width="5" height="5" rx="1"/><rect x="26" y="24" width="5" height="5" rx="1"/><rect x="17" y="32" width="5" height="5" rx="1"/><rect x="26" y="32" width="5" height="5" rx="1"/></g></svg>',
+bk:'<svg viewBox="0 0 48 48"><rect x="12" y="6" width="25" height="35" rx="3" fill="#9a6b5b"/><rect x="12" y="31" width="25" height="6" fill="#e8c9a0"/><rect x="26" y="6" width="5" height="12" fill="#e8c9a0"/></svg>',
+sh:'<svg viewBox="0 0 48 48"><path d="M6 27l10-12 8 6 14 4a4 4 0 013 4v7H6z" fill="#ee7233"/><rect x="6" y="35" width="35" height="6" rx="3" fill="#f6b95e"/></svg>',
+sr:'<svg viewBox="0 0 48 48"><path d="M16 7L6 13l4 9 5-2v19h18V20l5 2 4-9-10-6c-1 3-4 5-8 5s-7-2-8-5z" fill="#5db3f0"/><circle cx="36" cy="35" r="6" fill="#2f6fd6"/></svg>',
+car:'<svg viewBox="0 0 48 48"><path d="M9 22l4-11h22l4 11a4 4 0 014 4v11H5V26a4 4 0 014-4z" fill="#3b82f0"/><path d="M15 14h18l3 8H12z" fill="#cfe4ff"/><circle cx="13" cy="36" r="4" fill="#2a5db8"/><circle cx="35" cy="36" r="4" fill="#2a5db8"/></svg>',
+all:'<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="none" stroke="#c9ccd2" stroke-width="2"/><path d="M21 17l7 7-7 7" stroke="#888" stroke-width="2.400" fill="none" stroke-linecap="round"/></svg>',
+dir:'<svg viewBox="0 0 24 24" fill="currentColor" style="width:1em;height:1em;vertical-align:-.15em"><rect x="3" y="9" width="18" height="12" rx="4"/><path d="M8 9l3-5h5l-2 5z" opacity=".8"/></svg>'}})();
+const CATS=['디지털기기','생활가전','가구/인테리어','생활/주방','유아동','의류','잡화','도서','티켓/교환권','취미/게임/음반','뷰티/미용','반려동물용품','기타'];
+const me={name:'우요',temp:42.4,dong:'송림1동'};
+function seed(){const n=Date.now(),u=(s,c,c2,k)=>sv(s,c,c2,k);const P=(o)=>Object.assign({type:'sale',price:0,direct:0,cat:'기타',desc:'',place:'',dong:'송림1동',dist:'0m',imgs:[],seller:{name:'이웃',dong:'송림1동',temp:36.5},mine:0,status:'sale',created:n,bumped:n,views:0,likes:0,chats:0,bumps:0},o);
+const ten=[];for(let i=1;i<=10;i++)ten.push(u('iPhone 16 · '+i+'/10','#c9ccc4','#e6e8e2',1));
+const posts=[
+P({id:'p1',type:'job',title:'!!급구!! 디즈니런 행사 스탭',price:11000,dong:'제물포 북성동1가',dist:'2km',cat:'알바',place:'인천 중구 북성동1가',desc:'디즈니런 행사 현장 스탭 급구합니다.\n당일 근무, 중식 제공.\n채팅으로 연락 주세요.',seller:{name:'행사팀',dong:'북성동1가',temp:37.2},created:n-2*H,chats:4,likes:5,views:120}),
+P({id:'p2',type:'share',title:'필독)2026 에어팟 맥스 2',dong:'송현1.2동',dist:'200m',cat:'디지털기기',imgs:[u('AirPods Max','#e3dfd5','#44474c')],desc:'나눔합니다. 조건은 채팅으로 문의해 주세요.',place:'송현초등학교 정문',seller:{name:'나눔천사',dong:'송현1.2동',temp:40.1},created:n-8*H,chats:22,likes:5,views:301}),
+P({id:'p3',type:'job',title:'동인천 컴포즈 화,목 마감 파트타이머 구인합니다~',price:10500,dong:'송림동',dist:'400m',cat:'알바',place:'동인천역 인근 컴포즈커피',desc:'화, 목 마감 파트타임 구합니다.\n오후 6시~11시, 주휴수당 지급.',seller:{name:'컴포즈동인천',dong:'송림동',temp:38.4},created:n-5*H,likes:1,views:44}),
+P({id:'p4',title:'리센느 원이 별이 포토카드',price:1000000,direct:1,cat:'취미/게임/음반',dong:'경기 시흥시',dist:'16km',imgs:[u('Photo Card','#b9b4aa','#6a6f78',1)],desc:'포토카드 판매합니다. 보관 상태 좋아요.',place:'시흥시청역 1번 출구',seller:{name:'포카러버',dong:'시흥시',temp:36.9},created:n-1*D,chats:3,likes:9,views:210}),
+P({id:'p5',title:'아이폰 16 화이트 128GB 판매합니다',price:680000,cat:'디지털기기',dong:'미추홀구 용현5동',dist:'4km',imgs:ten,desc:'1년반정도 사용했구요 전면은 필름때문에 더러워보이는데 안 깨졌여용 후면도 안 깨짐.\n근데 전체적은 사용감 있어요 사진 확인해주세요',place:'인하대역 2번 출구',seller:{name:'안녕',dong:'미추홀구 용현5동',temp:39.2},created:n-23*H,bumped:n-23*H,views:83,likes:1,chats:1}),
+P({id:'p6',title:'LG 그램 17인치 노트북',price:450000,cat:'디지털기기',dong:'송림1동',dist:'300m',imgs:[u('LG gram','#d6dce4','#7b8794',2)],desc:'사무용으로만 썼어요. 충전기 포함.',place:'송림체육관 앞',seller:{name:'가나다라abc',dong:'주안동',temp:41.6},created:n-2*D,views:77,likes:3}),
+P({id:'m1',title:'인형 일괄 판매',price:3000,direct:1,cat:'취미/게임/음반',imgs:[u('Plush','#e5ddd4','#a77a5d')],desc:'인형 여러 개 일괄 판매해요.',place:'송림1동 주민센터',seller:me,mine:1,created:n-21*D,bumped:n-21*D,views:59,likes:4}),
+P({id:'m2',title:'책 일괄판매 (20권)',price:20000,cat:'도서',imgs:[u('Books','#2a2a2c','#8d8f94',2)],desc:'소설책 20권 한 번에 팔아요.',place:'송림1동 주민센터',seller:me,mine:1,created:n-21*D,bumped:n-21*D,views:334,chats:1,bumps:1}),
+P({id:'m3',title:'경추베개',price:3000,cat:'생활/주방',imgs:[u('Pillow','#d9d4b8','#f1ecd3')],desc:'새 제품 같은 경추베개입니다.',place:'송림1동 주민센터',seller:me,mine:1,created:n-30*D,bumped:n-30*D,views:41}),
+P({id:'m4',title:'무선 키보드',price:15000,cat:'디지털기기',imgs:[u('Keyboard','#d7dae0','#8a93a0',2)],desc:'거래 완료',seller:me,mine:1,status:'done',created:n-40*D,bumped:n-40*D,views:90,likes:2}),
+P({id:'m5',title:'접이식 의자',price:8000,cat:'가구/인테리어',desc:'거래 완료',seller:me,mine:1,status:'done',created:n-50*D,bumped:n-50*D,views:30}),
+P({id:'m6',title:'겨울 패딩 L',price:30000,cat:'의류',desc:'숨김 처리한 글',seller:me,mine:1,status:'hidden',created:n-60*D,bumped:n-60*D,views:12})];
+const chats=[
+{id:'c1',postId:'p4',name:'포카러버',temp:36.9,dong:'시흥시',resp:'보통 1시간 이내 응답',unread:3,upd:n-3*H,snap:{title:posts[3].title,price:1000000,img:posts[3].imgs[0]},msgs:[{me:1,text:'안녕하세요 아직 판매 중인가요?',t:n-5*H},{me:0,text:'네 판매 중이에요!',t:n-4*H},{me:0,text:'직거래 가능하세요?',t:n-3*H}]},
+{id:'c2',postId:'gone',name:'가나다라abc',temp:41.6,dong:'주안동',resp:'보통 10분 이내 응답',unread:2,upd:n-7*H,snap:{title:'에어팟4세대 노캔o (미개봉)',price:185000,img:sv('AirPods','#e9e9e6','#fff')},msgs:[{me:1,text:'안녕하세요 혹시 구매영수증 같은 거 볼 수 있을까요?',t:n-26*D+0},{me:0,text:'쿠팡에서 시킨 배송내역은있어요',t:n-26*D+H}]},
+{id:'c3',postId:'m2',name:'책벌레',temp:38.8,dong:'송림동',resp:'보통 30분 이내 응답',unread:1,upd:n-1*D,snap:{title:'책 일괄판매 (20권)',price:20000,img:posts[7].imgs[0]},msgs:[{me:0,text:'책 아직 있나요?',t:n-1*D}]}];
+return{posts,chats,likes:['p2'],recents:[],searches:['아이폰','에어팟'],notInt:[],promo:1}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.posts)S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('저장 공간이 부족해요')}};
+const post=id=>S.posts.find(p=>p.id===id),chat=id=>S.chats.find(c=>c.id===id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const kst=(t,o)=>new Date(t).toLocaleString('ko-KR',Object.assign({timeZone:'Asia/Seoul'},o));
+const tm=t=>kst(t,{hour:'numeric',minute:'2-digit',hour12:true}),dayS=t=>kst(t,{year:'numeric',month:'long',day:'numeric'});
+function ago(t){const d=Date.now()-t;if(d<6e4)return'방금 전';if(d<H)return Math.floor(d/6e4)+'분 전';if(d<D)return Math.floor(d/H)+'시간 전';if(d<7*D)return Math.floor(d/D)+'일 전';if(d<30*D)return Math.floor(d/D/7)+'주 전';return Math.floor(d/D/30)+'개월 전'}
+const money=n=>n>=1e6&&n%1e4===0?(n/1e4)+'만원':Number(n).toLocaleString('ko-KR')+'원';
+const priceH=p=>p.type==='job'?'시급 '+money(p.price):p.type==='share'?'나눔 '+I.hf:money(p.price);
+const thumb=src=>`<div class="th">${src?`<img src="${src}" alt="">`:I.ph}</div>`;
+const BD=`<span class="bd">${I.dir}바로구매</span>`;
+let nav=[{s:'home'}],lastKey='',homeF='전체',manF='sale',FI=[],editing=null;
+const cur=()=>nav[nav.length-1];
+function push(s,o){const sc=$('.scroll');if(sc)cur().y=sc.scrollTop;nav.push(Object.assign({s},o));render()}
+function go(t){nav=[{s:t}];render()}
+function back(){if(nav.length>1)nav.pop();render()}
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,1800)}
+function sheet(title,items){$('#sheet').innerHTML=`<div class="ov" data-a="close"><div class="sh" data-a="noop">${title?`<div class="sht">${title}</div>`:''}${items.map(i=>`<button class="si ${i.d?'d':''}" data-a="${i.a}" data-id="${i.id||''}" data-v="${i.v||''}" data-m="${i.m||''}">${i.l}</button>`).join('')}</div></div>`}
+const unread=()=>S.chats.reduce((a,c)=>a+(c.unread||0),0);
+function tabsH(){const s=cur().s,at=s==='chats'?'chats':s==='my'?'my':'home';const T=(id,ic,l,dis)=>dis?`<div class="tab dis" aria-disabled="true">${I[ic]}${l}</div>`:`<button class="tab ${at===id?'on':''}" data-a="tab" data-id="${id}">${id==='chats'&&unread()?`<span class="bg">${unread()}</span>`:''}${at===id&&id!=='chats'?I[ic==='user'?'userf':ic]:I[ic]}${l}</button>`;return T('home','home','홈')+T('c','comm','커뮤니티',1)+T('m','map','동네지도',1)+T('chats','chat','채팅')+T('my','user','나의 당근')}
+const sortP=l=>l.sort((a,b)=>b.bumped-a.bumped);
+const row=p=>{const meta=p.type==='job'?`${p.dong} · ${p.dist} · 알바`:`${p.dong} · ${p.dist} · ${ago(p.bumped)}`;const ci=p.type==='job'?I.ppl:p.type==='share'?I.mail:I.cb;return`<div class="item" data-a="open" data-id="${p.id}">${thumb(p.imgs[0])}<div class="ib"><div class="it"><span>${esc(p.title)}</span><button class="mb" data-a="pmore" data-id="${p.id}" aria-label="더보기">${I.dots}</button></div><div class="meta">${esc(meta)}</div><div class="price">${priceH(p)}</div>${p.direct?BD:''}<div class="cnt">${p.chats?`<span>${ci}${p.chats}</span>`:''}${p.likes?`<span>${I.hf}${p.likes}</span>`:''}</div></div></div>`};
+const V={};
+V.home=()=>{let l=S.posts.filter(p=>p.status==='sale'&&!S.notInt.includes(p.id));if(homeF==='알바')l=l.filter(p=>p.type==='job');else if(homeF==='나눔')l=l.filter(p=>p.type==='share');else if(homeF==='중고거래')l=l.filter(p=>p.type==='sale');l=sortP(l);if(homeF==='가까운 동네')l.sort((a,b)=>parseFloat(a.dist)*(/km/.test(a.dist)?1000:1)-parseFloat(b.dist)*(/km/.test(b.dist)?1000:1));
+const C=(f,x)=>`<button class="chip ${homeF===f?'on':''}" data-a="${x?'toast':'filter'}" data-v="${f}" data-m="${f} 서비스는 시뮬레이션이에요">${f}${x?I.up:''}</button>`;
+return`<div class="hd"><div class="loc">${I.pin.replace('<svg','<svg style="width:24px;height:24px"')}송림1동<small>한강로3가</small></div><button class="ic" data-a="search" aria-label="검색">${I.search}</button><button class="ic ${S.nbell?'':'dot'}" data-a="notif" aria-label="알림">${I.bell}</button><button class="ic" data-a="menu" aria-label="전체 메뉴">${I.menu}</button></div><div class="chips">${C('전체')}${C('부동산',1)}${C('중고차',1)}${C('가까운 동네')}${C('알바')}${C('나눔')}${C('중고거래')}</div><div class="scroll">${l.length?l.map(row).join(''):'<div class="empty">게시글이 없어요</div>'}<div style="height:90px"></div></div><button class="fab" data-a="write">${I.plus}글쓰기</button>`};
+function mapSvg(l){return`<svg viewBox="0 0 700 230" preserveAspectRatio="xMidYMid slice"><rect width="700" height="230" fill="#ece8e1"/><rect x="380" width="320" height="230" fill="#d6e6ee"/><rect x="0" y="130" width="300" height="100" fill="#dfe8d4"/><rect x="150" y="70" width="170" height="70" fill="#f3e3c4"/><path d="M-10 150L330 110M330 110L420 230M300 -10L360 110L420 230" stroke="#fff" stroke-width="12" fill="none"/><path d="M330 -10L350 80L380 230" stroke="#f1c24b" stroke-width="5" fill="none"/><g font-size="22" fill="#6b7280" font-family="sans-serif"><text x="30" y="60">${esc(l)}</text></g><g transform="translate(350 70)"><path d="M0 52C-30 18-26-8 0-8s30 26 0 60z" fill="#ff6f0f"/><circle cy="14" r="9" fill="#fff"/></g></svg>`}
+V.detail=t=>{const p=post(t.id);if(!p)return'';const lk=S.likes.includes(p.id),im=p.imgs,job=p.type==='job',sh=p.type==='share';
+const bar=`<div class="dtop ${im.length?'':'solid'}" id="dtop"><button data-a="back" aria-label="뒤로">${I.back}</button><button data-a="tab" data-id="home" aria-label="홈">${I.home}</button><i></i><button data-a="toast" data-m="공유 링크를 복사했어요" aria-label="공유">${I.share}</button><button data-a="pmore" data-id="${p.id}" aria-label="더보기">${I.dots}</button></div>`;
+const gal=im.length?`<div class="gw"><div class="gal" id="gal">${im.map(s=>`<img src="${s}" alt="">`).join('')}</div>${im.length>1?`<span class="gc" id="gc">1 / ${im.length}</span>`:''}</div>`:'<div class="gn"></div>';
+const info=job?`<div class="info"><div><span>급여</span><b>시급 ${money(p.price)}</b></div><div><span>근무지</span><b>${esc(p.place||p.dong)}</b></div><div><span>업종</span><b>${esc(p.cat)}</b></div></div>`:'';
+const cta=p.mine?`<button class="cta" data-a="edit" data-id="${p.id}">게시글 수정</button>`:`<button class="cta" data-a="chatp" data-id="${p.id}">${job?'채팅으로 지원하기':'채팅하기'}</button>${p.direct?`<button class="cta alt" data-a="toast" data-m="바로구매는 시뮬레이션이에요">바로구매</button>`:''}`;
+return`${bar}<div class="scroll">${gal}<div class="pad"><div class="sl"><div class="av">${I.userf}</div><div><b>${esc(p.seller.name)}</b><small>${esc(p.seller.dong)}</small></div><div class="tm">${p.seller.temp}°C<u>매너온도</u></div></div><h1 class="dt">${esc(p.title)}</h1><div class="dp">${job?'시급 '+money(p.price):sh?'나눔':money(p.price)}${p.type==='sale'?`<span class="pay">pay</span><a data-a="toast" data-m="가격 제안은 시뮬레이션이에요">가격 제안하기</a>`:''}</div><div class="sub"><u>${esc(p.cat)}</u> · 끌올 ${ago(p.bumped)}</div>${info}<p class="desc">${esc(p.desc).replace(/\n/g,'<br>')}</p>${p.place?`<div class="pl"><b>${job?'근무 장소':'거래 희망 장소'}</b><span>${esc(p.place)}</span>${I.chev}</div><div class="map">${mapSvg(p.place)}<button data-a="toast" data-m="지도 보기는 시뮬레이션이에요">지도 보기 ↗</button></div>`:''}<div class="stat">${job?'지원':'채팅'} ${p.chats} · 관심 ${p.likes} · 조회 ${p.views}</div><a class="rep" data-a="report">이 게시글 신고하기</a></div></div><div class="bar"><button class="hb ${lk?'on':''}" data-a="like" data-id="${p.id}" aria-label="관심">${I.heart}</button>${cta}</div>`};
+V.chats=()=>{const l=[...S.chats].sort((a,b)=>b.upd-a.upd);return`<div class="hd"><h2 class="big">채팅</h2></div><div class="scroll">${l.length?l.map(c=>{const m=c.msgs[c.msgs.length-1];return`<div class="cr" data-a="room" data-id="${c.id}"><div class="av">${I.userf}</div><div class="c"><div class="n">${esc(c.name)}<small>${esc(c.dong)} · ${ago(c.upd)}</small></div><div class="l">${m?esc(m.text):'대화를 시작해 보세요'}</div></div>${thumb(c.snap.img).replace('class="th"','class="th"')}${c.unread?`<span class="ub">${c.unread}</span>`:''}</div>`}).join(''):'<div class="empty">채팅이 없어요</div>'}</div>`};
+V.room=t=>{const c=chat(t.id),p=post(c.postId);const gone=!p;return`<div class="rh"><button class="ic" style="width:36px;height:36px;display:grid;place-items:center" data-a="back" aria-label="뒤로"><span style="width:26px;display:block">${I.back}</span></button><div class="c"><b>${esc(c.name)}</b><span class="tp">${c.temp}°C</span><small>${esc(c.dong)}, ${esc(c.resp)}</small></div><button data-a="toast" data-m="전화 연결은 시뮬레이션이에요" style="width:36px"><span style="width:26px;display:block">${I.phone}</span></button><button data-a="toast" data-m="차단·신고는 시뮬레이션이에요" style="width:28px"><span style="width:22px;display:block;margin:auto">${I.dots}</span></button></div><div class="strip" ${gone?'':`data-a="open" data-id="${p.id}"`}>${thumb(c.snap.img)}<div class="${gone?'gone':''}"><b>${gone?'<span class="sp">삭제됨</span> ':''}${esc(p?p.title:c.snap.title)}</b><span class="sp">${money(p?p.price:c.snap.price)}</span></div></div><div class="scroll" id="sc"><div class="msgs" id="msgs"></div></div><div class="ib2"><span class="spk">${I.spark}</span><button class="pl2" data-a="toast" data-m="첨부는 시뮬레이션이에요" aria-label="첨부">${I.plus}</button><div class="f"><input id="inp" placeholder="메시지 보내기" autocomplete="off" enterkeyhint="send"><button data-a="emoji" aria-label="이모티콘">${I.smile}</button></div><button class="sd" id="sd" data-a="send" aria-label="전송">${I.send}</button></div>`};
+function drawMsgs(){const c=chat(cur().id),el=$('#msgs');if(!el)return;let last='',h='';c.msgs.forEach(m=>{const d=dayS(m.t);if(d!==last){h+=`<div class="dv">${d}</div>`;last=d}h+=m.me?`<div class="m me"><span class="tt">${tm(m.t)}</span><div class="bb">${esc(m.text)}</div></div>`:`<div class="m"><div class="av">${I.userf}</div><div class="bb">${esc(m.text)}</div><span class="tt">${tm(m.t)}</span></div>`});el.innerHTML=h;const s=$('#sc');s.scrollTop=s.scrollHeight}
+V.my=()=>{const L=(i,l,a)=>`<button data-a="${a||'toast'}" data-m="${l}은(는) 시뮬레이션이에요" data-v="${l}">${i}${l}</button>`;return`<div class="hd"><h2 class="big">나의 당근</h2><button class="ic" data-a="gear" aria-label="설정">${I.gear}</button></div><div class="scroll g"><div class="pan prof" style="padding:14px 20px 14px 16px"><div class="av" style="width:72px;height:72px">${I.userf}</div><span>${me.name}</span><span class="tp">${me.temp}°C</span><span style="margin-left:auto;color:var(--fg2);width:26px">${I.chev}</span></div><div class="pan"><div class="pay1"><span class="payl"><span style="width:12px;height:16px;border-radius:6px;background:var(--brand);display:inline-block"></span>pay</span><button data-a="toast" data-m="충전은 시뮬레이션이에요">충전</button><span class="sp"></span><button data-a="toast" data-m="송금은 시뮬레이션이에요">송금</button><button class="paybtn" data-a="toast" data-m="결제는 시뮬레이션이에요">${I.scan}결제</button></div><div class="bal"><button data-a="toast" data-m="머니는 시뮬레이션이에요">머니 <b>0원</b>${I.chev}</button><i></i><button data-a="toast" data-m="포인트는 시뮬레이션이에요">포인트 <b>81원</b>${I.chev}</button></div></div><div class="pan sg" style="padding:14px 4px">${[['bag','중고거래','sf','중고거래'],['job','알바','sf','알바'],['hs','부동산'],['bk','레슨/과외'],['sh','동네걷기'],['sr','세탁 수거'],['car','중고차'],['all','전체보기']].map(x=>`<button data-a="${x[2]||'toast'}" data-v="${x[3]||''}" data-m="${x[1]}은(는) 시뮬레이션이에요">${I[x[0]]}${x[1]}</button>`).join('')}</div><div class="pan r4"><button data-a="list" data-v="likes">${I.heart}관심목록</button><button data-a="list" data-v="recents">${I.dc}최근 본</button>${L(I.cp,'쿠폰')}${L(I.gm,'혜택')}</div><div class="pan"><div class="sec">자주 사용</div><button class="row" data-a="manage">${I.rc}판매관리${I.chev.replace('<svg','<svg class="ch"')}</button></div><div class="pan"><div class="sec">나의 거래</div><button class="row" data-a="manage">${I.rc}판매내역${I.chev.replace('<svg','<svg class="ch"')}</button><button class="row" data-a="toast" data-m="구매내역은 시뮬레이션이에요">${I.bag.replace('<svg','<svg style="width:30px;height:30px"')}구매내역${I.chev.replace('<svg','<svg class="ch"')}</button></div><div style="height:12px"></div></div>`};
+V.manage=()=>{const cnt=s=>S.posts.filter(p=>p.mine&&p.status===s).length;const l=sortP(S.posts.filter(p=>p.mine&&p.status===manF));const stl={sale:'판매중',done:'거래완료',hidden:'숨김'};const C=(s,n)=>`<button class="chip ${manF===s?'on':''}" data-a="mfilter" data-v="${s}" style="height:44px;font-size:17px;padding:0 22px">${n}${s==='hidden'?'':' '+cnt(s)}</button>`;
+return`<div class="hd"><button class="ic" data-a="back" aria-label="뒤로">${I.back}</button><h2>판매관리</h2><button class="tx" data-a="write" style="width:auto">글쓰기</button></div><div class="chips" style="padding-top:8px">${C('sale','판매중')}${C('done','거래완료')}${C('hidden','숨김')}</div><div class="scroll g" style="padding-top:2px">${l.length?l.map((p,i)=>`<div class="mc"><div class="h"><span class="st">${stl[p.status]}</span>${p.direct?BD:''}<button class="mb" data-a="mmore" data-id="${p.id}" aria-label="더보기">${I.dots}</button></div><div class="mb2" data-a="open" data-id="${p.id}">${thumb(p.imgs[0])}<div class="ib"><div class="t1">${esc(p.title)}</div><div class="m2">${esc(p.dong)} · ${p.bumps?'끌올 ':''}${ago(p.bumped)}${p.bumps?' · 끌올 '+p.bumps+'회':''}</div><div class="p2">${money(p.price)}</div><div class="st2"><span>${I.eye}${p.views}</span>${p.likes?`<span>${I.hf}${p.likes}</span>`:''}${p.chats?`<span>${I.cb}${p.chats}</span>`:''}</div></div></div>${p.status==='sale'?`<button class="bump" data-a="bump" data-id="${p.id}">끌어올리기</button>`:''}${p.status==='sale'&&i===0&&S.promo?`<div class="promo">${I.spark}<span><b>판매글을 다듬을까요?</b> 자세히 쓴 판매자의 물품이 더 잘 팔려요. <u data-a="edit" data-id="${p.id}">수정안 보기</u></span><button class="x" data-a="nopromo" aria-label="닫기">${I.x}</button></div>`:''}</div>`).join(''):'<div class="empty">해당하는 게시글이 없어요</div>'}<div style="height:24px"></div></div>`};
+V.write=t=>{const p=t.id?post(t.id):null,ty=p?p.type:'sale';return`<div class="hd"><button class="ic" data-a="back" aria-label="닫기">${I.x}</button><h2>${p?'글 수정':'내 물건 팔기'}</h2><span style="width:36px"></span></div><div class="scroll"><div class="fm"><label>게시글 유형</label><div class="tg" id="tg">${[['sale','중고거래'],['job','알바'],['share','나눔']].map(x=>`<button class="chip ${ty===x[0]?'on':''}" data-a="wtype" data-v="${x[0]}">${x[1]}</button>`).join('')}</div><label>사진 (최대 10장)</label><div class="ph" id="ph"></div><input type="file" id="file" accept="image/*" multiple hidden><label for="f-title">제목</label><input class="in" id="f-title" maxlength="60" placeholder="제목" value="${p?esc(p.title):''}"><div id="pw" ${ty==='share'?'hidden':''}><label for="f-price" id="pl">${ty==='job'?'시급 (원)':'가격 (원)'}</label><input class="in" id="f-price" inputmode="numeric" placeholder="가격을 입력해 주세요" value="${p?p.price:''}"><label class="ck" id="dw" ${ty==='sale'?'':'hidden'}><input type="checkbox" id="f-direct" ${p&&p.direct?'checked':''}>바로구매 허용</label></div><label for="f-cat">카테고리</label><select class="in" id="f-cat">${CATS.map(c=>`<option ${p&&p.cat===c?'selected':''}>${c}</option>`).join('')}</select><label for="f-desc">자세한 설명</label><textarea class="in" id="f-desc" placeholder="게시글 내용을 작성해 주세요.">${p?esc(p.desc):''}</textarea><label for="f-place">거래 희망 장소</label><input class="in" id="f-place" placeholder="예) 인하대역 2번 출구" value="${p?esc(p.place):''}"></div></div><div class="bar"><button class="cta gr" data-a="back">취소</button><button class="cta" data-a="submit">${p?'수정 완료':'등록'}</button></div>`};
+function drawPh(){const el=$('#ph');if(!el)return;el.innerHTML=(FI.length<10?`<label class="add" for="file">${I.plus}${FI.length}/10</label>`:'')+FI.map((s,i)=>`<div><img src="${s}" alt=""><button class="rm" data-a="rmimg" data-v="${i}" aria-label="삭제">${I.x}</button></div>`).join('')}
+function readImg(f){return new Promise(r=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,800/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.75))};im.onerror=()=>r(null);im.src=fr.result};fr.readAsDataURL(f)})}
+V.search=()=>`<div class="hd"><button class="ic" data-a="back" aria-label="뒤로">${I.back}</button><div class="sbar">${I.search}<input id="q" placeholder="상품명, 내용으로 검색" autocomplete="off" enterkeyhint="search"></div></div><div class="scroll" id="sres"></div>`;
+function drawSearch(){const q=($('#q').value||'').trim().toLowerCase(),el=$('#sres');if(!q){el.innerHTML=`<div class="lh">최근 검색어${S.searches.length?'<button data-a="clrs">전체 삭제</button>':''}</div><div class="rc">${S.searches.length?S.searches.map((s,i)=>`<span><b data-a="rs" data-v="${esc(s)}" style="font-weight:400">${esc(s)}</b><button data-a="rms" data-v="${i}" aria-label="삭제">${I.x}</button></span>`).join(''):'<span style="border:0;color:var(--fg3)">최근 검색어가 없어요</span>'}</div>`;return}
+const l=sortP(S.posts.filter(p=>p.status!=='hidden'&&(p.title+' '+p.desc+' '+p.cat+' '+p.place).toLowerCase().includes(q)));el.innerHTML=l.length?l.map(row).join(''):`<div class="empty">'${esc($('#q').value)}' 검색 결과가 없어요</div>`}
+V.notif=()=>{const N=[['chat','가나다라abc님이 메시지를 보냈어요','쿠팡에서 시킨 배송내역은있어요','7시간 전','room','c2'],['chat','포카러버님이 메시지를 보냈어요','직거래 가능하세요?','3시간 전','room','c1'],['deal','관심 상품 가격이 내려갔어요','LG 그램 17인치 노트북 · 450,000원','어제','open','p6'],['deal','끌어올리기 할 수 있어요','책 일괄판매 (20권)','2일 전','manage','']];return`<div class="hd"><button class="ic" data-a="back" aria-label="뒤로">${I.back}</button><h2>알림</h2><span style="width:36px"></span></div><div class="scroll">${N.map(n=>`<div class="nt" data-a="${n[4]}" data-id="${n[5]}"><div class="ci">${n[0]==='chat'?I.chat:I.rc}</div><div><b>${n[1]}</b><p>${n[2]}</p><small>${n[3]}</small></div></div>`).join('')}</div>`};
+V.list=t=>{const ids=S[t.k];const l=ids.map(post).filter(Boolean);return`<div class="hd"><button class="ic" data-a="back" aria-label="뒤로">${I.back}</button><h2>${t.k==='likes'?'관심목록':'최근 본'}</h2><span style="width:36px"></span></div><div class="scroll">${l.length?l.map(row).join(''):'<div class="empty">아직 없어요</div>'}</div>`};
+const AFTER={home:()=>{S.nbell=0},detail:t=>{const sc=$('.scroll'),g=$('#gal'),d=$('#dtop');if(g){g.onscroll=()=>{const c=$('#gc');if(c)c.textContent=(Math.round(g.scrollLeft/g.clientWidth)+1)+' / '+t.n};t.n=post(t.id).imgs.length;sc.onscroll=()=>d.classList.toggle('solid',sc.scrollTop>g.clientHeight-60)}},room:t=>{const c=chat(t.id);if(c.unread){c.unread=0;save();renderTabs()}drawMsgs();const i=$('#inp');i.oninput=updSend;i.onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)ACT.send()};updSend()},search:()=>{const q=$('#q');q.oninput=drawSearch;q.onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)addRecent(q.value)};drawSearch()},write:t=>{FI=t.id?[...post(t.id).imgs]:FI;drawPh();$('#file').onchange=async e=>{for(const f of [...e.target.files]){if(FI.length>=10)break;const s=await readImg(f);if(s)FI.push(s)}e.target.value='';drawPh()}}};
+function updSend(){const i=$('#inp'),s=$('#sd');if(i&&s)s.classList.toggle('on',!!i.value.trim())}
+function addRecent(v){v=v.trim();if(!v)return;S.searches=[v,...S.searches.filter(x=>x!==v)].slice(0,10);save()}
+function renderTabs(){const s=cur().s,t=$('#tabs');t.hidden=!['home','chats','my'].includes(s);if(!t.hidden)t.innerHTML=tabsH()}
+function render(){const t=cur(),k=t.s+(t.id||t.k||'');const sc=$('.scroll'),y=k===lastKey&&sc?sc.scrollTop:(t.y||0);lastKey=k;$('#view').innerHTML=V[t.s](t);const n=$('.scroll');if(n&&t.s!=='room')n.scrollTop=y;renderTabs();AFTER[t.s]&&AFTER[t.s](t);if(t.s==='detail'&&n)n.dispatchEvent(new Event('scroll'))}
+function openChat(pid){let c=S.chats.find(c=>c.postId===pid);if(!c){const p=post(pid);c={id:'c'+Date.now(),postId:pid,name:p.seller.name,temp:p.seller.temp,dong:p.seller.dong,resp:'보통 10분 이내 응답',unread:0,upd:Date.now(),msgs:[],snap:{title:p.title,price:p.price,img:p.imgs[0]||''}};S.chats.unshift(c);p.chats++;save()}push('room',{id:c.id})}
+function delPost(id){S.posts=S.posts.filter(p=>p.id!==id);S.likes=S.likes.filter(x=>x!==id);S.recents=S.recents.filter(x=>x!==id);save()}
+const REP=['네 안녕하세요!','가능해요. 시간 언제 괜찮으세요?','사진 더 보내드릴게요','네고는 어려워요 ㅠㅠ'];
+const ACT={
+noop(){},close(){$('#sheet').innerHTML=''},toast(e){toast(e.m)},
+tab(e){go(e.id)},back,
+open(e){const p=post(e.id);if(!p)return;p.views++;S.recents=[p.id,...S.recents.filter(x=>x!==p.id)].slice(0,30);save();push('detail',{id:e.id})},
+filter(e){homeF=e.v;render()},mfilter(e){manF=e.v;render()},
+like(e){const p=post(e.id),i=S.likes.indexOf(p.id);if(i<0){S.likes.push(p.id);p.likes++}else{S.likes.splice(i,1);p.likes=Math.max(0,p.likes-1)}save();render()},
+pmore(e){const p=post(e.id),it=[];if(p.mine)it.push({l:'게시글 수정',a:'edit',id:p.id},{l:'삭제',a:'delc',id:p.id,d:1});else it.push({l:'관심 없음',a:'notint',id:p.id},{l:'이 게시글 신고하기',a:'report',d:1});sheet('',it)},
+notint(e){S.notInt.push(e.id);save();toast('이 게시글을 숨겼어요');if(cur().s==='detail')back();else render()},
+report(){toast('신고가 접수됐어요 (시뮬레이션)')},
+delc(e){sheet('게시글을 삭제할까요?<br><small style="color:var(--fg2)">삭제한 글은 복구할 수 없어요.</small>',[{l:'삭제',a:'delok',id:e.id,d:1},{l:'취소',a:'close'}])},
+delok(e){delPost(e.id);toast('삭제했어요');if(cur().s==='detail')nav.pop();render()},
+edit(e){editing=e.id;push('write',{id:e.id})},
+write(){editing=null;FI=[];push('write',{})},
+wtype(e){document.querySelectorAll('#tg .chip').forEach(c=>c.classList.toggle('on',c.dataset.v===e.v));$('#pw').hidden=e.v==='share';$('#dw').hidden=e.v!=='sale';$('#pl').textContent=e.v==='job'?'시급 (원)':'가격 (원)'},
+rmimg(e){FI.splice(+e.v,1);drawPh()},
+submit(){const ty=document.querySelector('#tg .chip.on').dataset.v,title=$('#f-title').value.trim(),pr=parseInt(($('#f-price').value||'').replace(/[^\d]/g,''))||0;if(!title)return toast('제목을 입력해 주세요');if(ty!=='share'&&!pr)return toast('가격을 입력해 주세요');
+const d={type:ty,title,price:ty==='share'?0:pr,direct:ty==='sale'&&$('#f-direct').checked?1:0,cat:ty==='job'?'알바':$('#f-cat').value,desc:$('#f-desc').value.trim(),place:$('#f-place').value.trim(),imgs:[...FI]};const t=cur();
+if(t.id){Object.assign(post(t.id),d);toast('수정했어요')}else{S.posts.unshift(Object.assign({id:'p'+Date.now(),dong:me.dong,dist:'0m',seller:me,mine:1,status:'sale',created:Date.now(),bumped:Date.now(),views:0,likes:0,chats:0,bumps:0},d));toast('등록했어요');manF='sale'}save();FI=[];nav.pop();render()},
+chatp(e){openChat(e.id)},room(e){push('room',{id:e.id})},
+send(){const i=$('#inp'),v=i.value.trim();if(!v)return;const c=chat(cur().id);c.msgs.push({me:1,text:v,t:Date.now()});c.upd=Date.now();i.value='';save();drawMsgs();updSend();const id=c.id;setTimeout(()=>{const c=chat(id);if(!c)return;c.msgs.push({me:0,text:REP[Math.floor(Math.random()*REP.length)],t:Date.now()});c.upd=Date.now();const inRoom=cur().s==='room'&&cur().id===id;if(inRoom)drawMsgs();else c.unread++;save();renderTabs()},1400)},
+emoji(){const i=$('#inp');i.value+='😊';updSend();i.focus()},
+search(){push('search')},notif(){S.nbell=1;push('notif')},
+menu(){sheet('전체 메뉴',[{l:'판매관리',a:'manage'},{l:'관심목록',a:'list',v:'likes'},{l:'최근 본',a:'list',v:'recents'},{l:'동네 설정',a:'toast',m:'동네 설정은 시뮬레이션이에요'}])},
+gear(){sheet('설정',[{l:'데이터 초기화',a:'reset',d:1},{l:'닫기',a:'close'}])},
+reset(){try{localStorage.removeItem(KEY)}catch(e){}S=seed();nav=[{s:'my'}];render();toast('초기화했어요')},
+manage(){push('manage')},list(e){push('list',{k:e.v})},sf(e){homeF=e.v;go('home')},
+nopromo(){S.promo=0;save();render()},
+bump(e){const p=post(e.id);p.bumped=Date.now();p.bumps++;save();render();toast('끌어올렸어요')},
+mmore(e){const p=post(e.id),it=[{l:'게시글 수정',a:'edit',id:p.id}];if(p.status==='sale')it.push({l:'거래완료로 변경',a:'setst',id:p.id,v:'done'},{l:'숨기기',a:'setst',id:p.id,v:'hidden'});else it.push({l:'판매중으로 변경',a:'setst',id:p.id,v:'sale'});it.push({l:'삭제',a:'delc',id:p.id,d:1});sheet('',it)},
+setst(e){post(e.id).status=e.v;save();render();toast('변경했어요')},
+clrs(){S.searches=[];save();drawSearch()},rs(e){$('#q').value=e.v;addRecent(e.v);drawSearch()},rms(e){S.searches.splice(+e.v,1);save();drawSearch()}};
+document.addEventListener('click',ev=>{const el=ev.target.closest('[data-a]');if(!el)return;const a=el.dataset.a;if(a==='noop')return;const f=ACT[a];if(!f)return;if(a!=='close')ACT.close();f(el.dataset)});
+document.addEventListener('click',ev=>{const r=ev.target.closest('.item[data-a=open]');if(r&&cur().s==='search')addRecent($('#q').value)},true);
+render();
+</script>
+
+</body></html>
