@@ -18,7 +18,7 @@ html,body{margin:0;height:100%;overflow:hidden;font-family:-apple-system,"SF Pro
 #phone{position:relative;width:100%;max-width:none;height:100dvh;margin:0 auto;display:flex;flex-direction:column;z-index:1}
 
 /* 상태바 */
-.sb{height:54px;flex:none;position:relative;font-weight:600;font-size:17px}
+.sb{display:none}
 .sb .t{position:absolute;left:36px;top:17px}
 .sb .r{position:absolute;right:24px;top:19px;display:flex;gap:6px;align-items:center}
 .sb .sig,.sb .bat{background:#fff;border-radius:2px}
@@ -57,11 +57,7 @@ html,body{margin:0;height:100%;overflow:hidden;font-family:-apple-system,"SF Pro
 
 <div id="phone">
   <div class="sb">
-    <span class="t" id="stime">9:41</span>
-    <span class="r">
-      <svg width="17" height="12" viewBox="0 0 17 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#fff"/><rect x="4.5" y="5.5" width="3" height="6.5" rx="1" fill="#fff"/><rect x="9" y="3" width="3" height="9" rx="1" fill="#fff"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#fff"/></svg>
-      <span class="bat"></span>
-    </span>
+
   </div>
 
   <div class="clock">
@@ -101,7 +97,11 @@ const APPS = [
   { name: "뮤직", file: "music.html", icon: "🎵", color: ["#ff6482", "#a90036"] },
   { name: "프롬", file: "fromm.html", icon: "💌", color: ["#8be0e5", "#37a9cf"] },
   { name: "유튜브", file: "YouTube.html", icon: "▶️", color: ["#ff4e45", "#d9120a"] },
-  { name: "번역", file: "Translate.html", icon: "文", color: ["#7fd6e2", "#55C2D0"] }
+  { name: "번역", file: "Translate.html", icon: "文", color: ["#7fd6e2", "#55C2D0"] },
+  { name: "ChatGPT", file: "ChatGPT.html", icon: "✳️", color: ["#2f7665", "#103f35"] },
+  { name: "당근", file: "Danggen.html", icon: "🥕", color: ["#ff9b57", "#ef6d36"] },
+  { name: "핀터레스트", file: "Pinterest.html", icon: "📌", color: ["#e60023", "#9f001a"] },
+  { name: "포스타입", file: "Postype.html", icon: "✒️", color: ["#222222", "#555555"] }
 ];
 
 const DOCK_FALLBACK = ["메시지"];
@@ -145,7 +145,6 @@ function tick() {
   const now = new Date();
   const hh = String(now.getHours()).padStart(2, "0");
   const mm = String(now.getMinutes()).padStart(2, "0");
-  document.getElementById("stime").textContent = `${now.getHours()}:${mm}`;
   document.getElementById("ctime").textContent = `${hh}:${mm}`;
   const days = ["일", "월", "화", "수", "목", "금", "토"];
   document.getElementById("cdate").textContent =
