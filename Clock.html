@@ -1,0 +1,143 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="dark"><title>시계</title>
+<style>
+:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);--line:#38383a;--g:#8e8e93;--card:#1c1c1e;--or:#ff9f0a;--gr:#30d158}
+*{box-sizing:border-box}html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;height:100%;position:relative;background:#000;color:#fff;font-family:-apple-system,"SF Pro Display","Apple SD Gothic Neo",system-ui,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none}
+button{font:inherit;color:inherit;cursor:pointer}
+.page{position:absolute;inset:0;overflow-y:auto;padding:0 16px 100px;display:none}.page.on{display:block}
+.top{display:flex;justify-content:flex-end;align-items:center;gap:12px;padding:14px 0 6px}
+.tt{flex:1;text-align:center;font-weight:600;font-size:16px}
+.pill{background:var(--card);border:0;border-radius:22px;height:38px;padding:0 17px;font-size:15px}.pill.c{width:38px;padding:0;font-size:26px;font-weight:300}
+h1{font-size:29px;margin:6px 0 10px;font-weight:700}h2{font-size:20px;margin:26px 0 8px}
+.row{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding:9px 0;min-height:66px}
+.row .l{flex:1;min-width:0}.sm{font-size:13px;color:var(--g)}.nm{font-size:21px;white-space:nowrap}
+.tm{font-size:44px;font-weight:200;white-space:nowrap;letter-spacing:-1px}.ap{font-size:.55em;margin-right:2px;letter-spacing:0}
+.at{font-size:48px;font-weight:300;letter-spacing:-1px;line-height:1.1}.at.off,.off .sm{color:var(--g)}
+.sw{width:46px;height:28px;border-radius:14px;background:#39393d;position:relative;flex:none;transition:.2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}.sw.on{background:var(--gr)}.sw.on::after{left:20px}
+.ib{border:0;background:none;font-size:22px;padding:6px 10px;color:var(--g)}.dl{color:#ff453a;font-size:26px}
+.tabs{position:fixed;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);height:60px;background:#1c1c1e;border-radius:32px;display:flex;padding:4px;z-index:5;box-shadow:0 0 0 1px #2c2c2e}
+.tab{flex:1;border:0;background:none;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px}.tab.on{background:#000;color:var(--or)}
+.tab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.swt{font-size:min(14vw,76px);font-weight:100;text-align:center;font-variant-numeric:tabular-nums;margin:18vh 0 32px;white-space:nowrap}
+.btns{display:flex;justify-content:space-between;align-items:center;padding:10px 0 24px}
+.cb{width:80px;height:80px;border-radius:50%;border:0;font-size:15px;background:#1c1c1e;color:#fff;display:flex;align-items:center;justify-content:center}
+.cb.g{color:var(--g)}.cb.gr{background:rgba(48,209,88,.2);color:var(--gr)}.cb.rd{background:rgba(255,69,58,.22);color:#ff453a}.cb.or{background:rgba(255,159,10,.22);color:var(--or)}.cb:disabled{opacity:.5}
+.lap{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:12px 0;font-size:19px;font-variant-numeric:tabular-nums}
+.wheels{display:flex;position:relative;height:220px;margin:30px 0 16px}
+.wheels::before{content:"";position:absolute;left:0;right:0;top:88px;height:44px;background:var(--card);border-radius:22px}
+.w{flex:1;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;position:relative;padding:88px 0;-webkit-mask-image:linear-gradient(transparent,#000 28%,#000 72%,transparent);mask-image:linear-gradient(transparent,#000 28%,#000 72%,transparent)}
+.w::-webkit-scrollbar{display:none}.w i{display:block;height:44px;line-height:44px;text-align:center;font-style:normal;font-size:21px;color:#6c6c70;scroll-snap-align:center;scroll-snap-stop:always}.w i.sel{color:#fff;font-size:23px}
+.w s{display:none;text-decoration:none;font-size:.62em;margin-left:6px}.w i.sel s{display:inline}
+.card{background:var(--card);border-radius:22px;padding:0 18px;margin-top:14px}
+.cr{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:15px;border-top:1px solid var(--line);gap:12px}.cr:first-child{border:0}
+.cr input,.cr select{background:none;border:0;color:var(--g);font-size:15px;text-align:right;outline:0;min-width:0;flex:1;font-family:inherit}
+.days{display:flex;gap:4px;flex-wrap:nowrap}.dy{width:30px;height:30px;line-height:30px;text-align:center;border-radius:50%;font-size:14px;color:var(--g);font-weight:400}.dy.on{background:var(--or);color:#000}
+.sheet,.ring{position:fixed;inset:0;background:#000;z-index:20;overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 14px) 20px 40px}
+.ring{z-index:30;background:rgba(0,0,0,.94);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;text-align:center}
+.sbar{display:flex;justify-content:space-between;align-items:center;font-size:18px}.lnk{background:none;border:0;color:var(--or);font-size:18px;padding:8px 4px}
+.del{width:100%;margin-top:20px;background:var(--card);border:0;border-radius:22px;padding:16px;color:#ff453a;font-size:18px}
+.search{width:100%;background:var(--card);border:0;border-radius:12px;padding:12px 14px;color:#fff;font-size:17px;margin:16px 0 6px;outline:0}
+.note{color:var(--g);font-size:13px;margin:18px 4px}
+.big{font-size:min(17vw,72px);font-weight:200;font-variant-numeric:tabular-nums;text-align:center;margin:20vh 0 30px}
+</style></head><body>
+<div id="p0" class="page"></div><div id="p1" class="page"></div><div id="p2" class="page"></div><div id="p3" class="page"></div>
+<div class="tabs" id="tabs"></div>
+<script>
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0');
+const CITIES=[['서울','Asia/Seoul'],['도쿄','Asia/Tokyo'],['베이징','Asia/Shanghai'],['홍콩','Asia/Hong_Kong'],['싱가포르','Asia/Singapore'],['방콕','Asia/Bangkok'],['하노이','Asia/Ho_Chi_Minh'],['자카르타','Asia/Jakarta'],['델리','Asia/Kolkata'],['두바이','Asia/Dubai'],['이스탄불','Europe/Istanbul'],['모스크바','Europe/Moscow'],['카이로','Africa/Cairo'],['런던','Europe/London'],['파리','Europe/Paris'],['마드리드','Europe/Madrid'],['로마','Europe/Rome'],['베를린','Europe/Berlin'],['시드니','Australia/Sydney'],['오클랜드','Pacific/Auckland'],['호놀룰루','Pacific/Honolulu'],['앵커리지','America/Anchorage'],['로스앤젤레스','America/Los_Angeles'],['덴버','America/Denver'],['시카고','America/Chicago'],['뉴욕','America/New_York'],['멕시코 시티','America/Mexico_City'],['상파울루','America/Sao_Paulo']];
+const SND=[['반향',660],['레이더',880],['비프',1200]],DN='일월화수목금토';
+const pick=n=>CITIES.filter(c=>n.includes(c[0]));
+const al=(h,m,l,d)=>({id:Math.random(),h,m,label:l,days:d,on:false,snd:0,sn:true});
+let S={c:pick(['서울','마드리드','방콕','하노이','로스앤젤레스','멕시코 시티']),
+al:[al(7,7,'알람',[]),al(7,10,'알람',[4]),al(7,10,'알람',[]),al(7,15,'알람',[]),al(7,20,'알람',[4]),al(7,30,'알람',[])],
+sw:{run:0,st:0,acc:0,laps:[]},tm:{sel:[0,30,0],lab:'',snd:0,state:'idle',end:0,left:0,total:0,rec:[]}};
+try{const x=JSON.parse(localStorage.getItem('clk'));if(x&&x.c&&x.al&&x.sw&&x.tm)S=x}catch(e){}
+const save=()=>{try{localStorage.setItem('clk',JSON.stringify(S))}catch(e){}};
+let tab=0,E=[0,0,0,0];
+const ICO=['<circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="4.5" ry="10"/><path d="M2 12h20M4 6.5h16M4 17.5h16"/>','<circle cx="12" cy="13.5" r="8"/><path d="M12 9v5h-3M3 5l3-2.5M21 5l-3-2.5"/>','<circle cx="12" cy="14" r="8"/><path d="M12 9v5M10 2h4M12 2v4M19 6l1.5-1.5"/>','<circle cx="12" cy="12" r="9.5"/><path d="M12 12l-3-4.5M12 2.5V1"/>'];
+const TN=['세계 시계','알람','스톱워치','타이머'];
+$('#tabs').innerHTML=TN.map((n,i)=>`<button class="tab" data-a="tab" data-i="${i}"><svg viewBox="0 0 24 24">${ICO[i]}</svg>${n}</button>`).join('');
+/* ---- world clock ---- */
+const P=(tz,d)=>{const o={};new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric'}).formatToParts(d).forEach(p=>o[p.type]=+p.value);return o};
+const UT=p=>Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute),UD=p=>Date.UTC(p.year,p.month-1,p.day);
+const f12=(h,m)=>`<span class="ap">${h<12?'오전':'오후'}</span>${h%12||12}:${pad(m)}`;
+const hdr=(t,n,plus)=>`<div class="top">${t?`<b class="tt">${t}</b>`:''}<button class="pill" data-a="edit">${E[n]?'완료':'편집'}</button>${plus?`<button class="pill c" data-a="${plus}">+</button>`:''}</div>`;
+let lastMin=-1;
+function rWorld(){const d=new Date(),l=P(undefined,d);lastMin=l.minute;
+$('#p0').innerHTML=hdr('',0,'addc')+'<h1>세계 시계</h1>'+S.c.map(([n,tz],i)=>{const c=P(tz,d),df=Math.round((UT(c)-UT(l))/6e4),a=Math.abs(df),dd=Math.round((UD(c)-UD(l))/864e5);
+const off=(df<0?'-':'+')+Math.floor(a/60)+'시간'+(a%60?' '+a%60+'분':'');
+return `<div class="row">${E[0]?`<button class="ib dl" data-a="delc" data-i="${i}">⊖</button>`:''}<div class="l"><div class="sm">${dd<0?'어제':dd>0?'내일':'오늘'}, ${off}</div><div class="nm">${n}</div></div>${E[0]?`<button class="ib" data-a="mvc" data-i="${i}" data-j="-1">▲</button><button class="ib" data-a="mvc" data-i="${i}" data-j="1">▼</button>`:`<div class="tm">${f12(c.hour,c.minute)}</div>`}</div>`}).join('')}
+function sheet(h){const s=document.createElement('div');s.className='sheet';s.innerHTML=h;document.body.appendChild(s);return s}
+function addCity(){const s=sheet(`<div class="sbar"><b></b><b>도시 선택</b><button class="lnk" data-x="c">취소</button></div><input class="search" id="q" placeholder="검색"><div id="cl"></div>`);
+const L=()=>{const q=$('#q').value.trim();$('#cl').innerHTML=CITIES.map((c,i)=>[c,i]).filter(([c])=>c[0].includes(q)||c[1].toLowerCase().includes(q.toLowerCase())).map(([c,i])=>`<div class="row" style="min-height:54px;cursor:pointer" data-x="a" data-i="${i}"><span style="font-size:20px">${c[0]}</span><span class="sm">${c[1].split('/').pop().replace(/_/g,' ')}</span></div>`).join('')};L();$('#q').oninput=L;
+s.onclick=e=>{const t=e.target.closest('[data-x]');if(!t)return;if(t.dataset.x=='a'){const c=CITIES[t.dataset.i];if(!S.c.some(x=>x[1]==c[1]))S.c.push(c);save();rWorld()}s.remove()}}
+/* ---- wheel ---- */
+function wheel(el,items,u,idx){el.innerHTML=items.map(t=>`<i>${t}<s>${u}</s></i>`).join('');const k=[...el.children],upd=()=>{const j=Math.round(el.scrollTop/44);k.forEach((c,x)=>c.classList.toggle('sel',x==j))};el.scrollTop=idx*44;upd();el.onscroll=()=>{upd();el.dispatchEvent(new Event('wch'))};k.forEach((c,x)=>c.onclick=()=>el.scrollTo({top:x*44,behavior:'smooth'}))}
+const val=el=>Math.round(el.scrollTop/44),rng=(n,s=0)=>Array.from({length:n},(_,i)=>pad(i+s));
+/* ---- audio / ring ---- */
+let ac,rt;const unlock=()=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume()}catch(e){}};document.addEventListener('click',unlock);
+function tone(f){try{unlock();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;o.connect(g);g.connect(ac.destination);g.gain.setValueAtTime(.3,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.5);o.start();o.stop(ac.currentTime+.5)}catch(e){}}
+function ring(t,sub,snd,onSnz){const f=SND[snd||0][1],r=document.createElement('div');r.className='ring';
+r.innerHTML=`<div style="font-size:44px;font-weight:300">${t}</div><div class="sm" style="font-size:20px">${sub}</div><div class="btns" style="gap:24px;justify-content:center"><button class="cb rd" data-x="s">중단</button>${onSnz?'<button class="cb or" data-x="z">다시 알림</button>':''}</div>`;document.body.appendChild(r);
+const go=()=>{tone(f);setTimeout(()=>tone(f),250)};go();clearInterval(rt);rt=setInterval(go,1000);
+r.onclick=e=>{const x=e.target.closest('[data-x]');if(!x)return;clearInterval(rt);r.remove();if(x.dataset.x=='z')onSnz()}}
+/* ---- alarms ---- */
+function dtxt(d){if(!d.length)return'';if(d.length==7)return'매일';if(d.length==1)return DN[d[0]]+'요일마다';if(d.join()=='1,2,3,4,5')return'주중';if(d.join()=='0,6')return'주말';return d.map(i=>DN[i]).join(' ')+'마다'}
+function rAlarm(){$('#p1').innerHTML=hdr('알람',1,'adda')+'<h1 style="font-size:24px;margin-bottom:4px">기타</h1>'+S.al.map((a,i)=>{const t=[a.label,dtxt(a.days)].filter(Boolean).join(', ');
+return `<div class="row ${a.on?'':'off'}">${E[1]?`<button class="ib dl" data-a="dela" data-i="${i}">⊖</button>`:''}<div class="l" data-a="eda" data-i="${i}" style="cursor:pointer"><div class="at ${a.on?'':'off'}">${f12(a.h,a.m)}</div><div class="sm" style="font-size:14px">${t}</div></div>${E[1]?`<button class="ib" data-a="mva" data-i="${i}" data-j="-1">▲</button><button class="ib" data-a="mva" data-i="${i}" data-j="1">▼</button>`:`<div class="sw ${a.on?'on':''}" data-a="tga" data-i="${i}"></div>`}</div>`}).join('')+'<p class="note">알람은 이 페이지가 열려 있는 동안에만 울립니다. 닫혀 있으면 기기 알림은 제공되지 않습니다.</p>'}
+function editAlarm(i){const nw=i==null,a=nw?{id:Math.random(),h:7,m:0,label:'알람',days:[],on:true,snd:0,sn:true}:{...S.al[i],days:[...S.al[i].days]};
+const s=sheet(`<div class="sbar"><button class="lnk" data-x="c">취소</button><b>${nw?'알람 추가':'알람 편집'}</b><button class="lnk" data-x="s">저장</button></div><div class="wheels"><div class="w" id="wa"></div><div class="w" id="wh"></div><div class="w" id="wm"></div></div>
+<div class="card"><div class="cr">반복<span class="days">${[...DN].map((d,j)=>`<b class="dy ${a.days.includes(j)?'on':''}" data-d="${j}">${d}</b>`).join('')}</span></div><div class="cr">레이블<input id="lb"></div><div class="cr">사운드<select id="sd">${SND.map((x,j)=>`<option value="${j}" ${a.snd==j?'selected':''}>${x[0]}</option>`).join('')}</select></div><div class="cr">다시 알림<div class="sw ${a.sn?'on':''}" id="sn"></div></div></div>${nw?'':'<button class="del" data-x="d">알람 삭제</button>'}`);
+$('#lb').value=a.label;wheel($('#wa'),['오전','오후'],'',a.h>=12?1:0);wheel($('#wh'),Array.from({length:12},(_,j)=>j+1),'',(a.h%12||12)-1);wheel($('#wm'),rng(60),'',a.m);
+s.onclick=e=>{const dy=e.target.closest('.dy');if(dy){const d=+dy.dataset.d;a.days=a.days.includes(d)?a.days.filter(x=>x!=d):[...a.days,d].sort();dy.classList.toggle('on');return}
+if(e.target.id=='sn'){a.sn=!a.sn;e.target.classList.toggle('on');return}
+const x=e.target.closest('[data-x]');if(!x)return;const k=x.dataset.x;
+if(k=='s'){a.h=val($('#wa'))*12+(val($('#wh'))+1)%12;a.m=val($('#wm'));a.label=$('#lb').value;a.snd=+$('#sd').value;a.on=true;a.fired=null;nw?S.al.push(a):S.al[i]=a}
+if(k=='d')S.al.splice(i,1);save();rAlarm();s.remove()}}
+function chkAlarms(){const n=new Date(),key=n.toDateString()+n.getHours()+':'+n.getMinutes();
+S.al.forEach(a=>{if(!a.on)return;let go=false;
+if(a.snz&&Date.now()>=a.snz){a.snz=0;go=true}
+else if(a.h==n.getHours()&&a.m==n.getMinutes()&&a.fired!=key&&(!a.days.length||a.days.includes(n.getDay()))){go=true;a.fired=key;if(!a.days.length)a.on=false}
+if(go){save();rAlarm();ring(f12txt(a.h,a.m),a.label,a.snd,a.sn?()=>{a.snz=Date.now()+9*6e4;a.on=true;save();rAlarm()}:null)}})}
+const f12txt=(h,m)=>`${h<12?'오전':'오후'} ${h%12||12}:${pad(m)}`;
+/* ---- stopwatch ---- */
+const el=()=>S.sw.acc+(S.sw.run?Date.now()-S.sw.st:0);
+function fs(ms){const c=Math.floor(ms/10)%100,s=Math.floor(ms/1000)%60,m=Math.floor(ms/6e4)%60,h=Math.floor(ms/36e5);return(h?h+':':'')+pad(m)+':'+pad(s)+'.'+pad(c)}
+function rSw(){const w=S.sw,t=el();
+$('#p2').innerHTML=`<div class="swt" id="swt">${fs(t)}</div><div class="btns"><button class="cb g" data-a="swl" ${!w.run&&!t?'disabled':''} style="${w.run?'color:#fff':''}">${w.run||!t?'랩':'재설정'}</button><button class="cb ${w.run?'rd':'gr'}" data-a="sws">${w.run?'중단':'시작'}</button></div><div>${[...w.laps].map((x,i)=>[x,i]).reverse().map(([x,i])=>`<div class="lap"><span>랩 ${i+1}</span><span>${fs(x-(w.laps[i-1]||0))}</span></div>`).join('')}</div>`}
+/* ---- timer ---- */
+const ft=ms=>{const s=Math.ceil(ms/1e3),h=Math.floor(s/3600);return(h?h+':':'')+pad(Math.floor(s/60)%60)+':'+pad(s%60)};
+function rTimer(){const T=S.tm,p=$('#p3');
+if(T.state=='idle'){p.innerHTML=hdr('',3)+`<h1>타이머</h1><div class="wheels" style="margin-top:50px"><div class="w" id="th"></div><div class="w" id="tmn"></div><div class="w" id="ts"></div></div><div class="btns"><button class="cb g" data-a="tcl">✕</button><button class="cb gr" data-a="tgo">▶</button></div>
+<div class="card"><div class="cr">레이블<input id="tl" placeholder="타이머"></div><div class="cr">사운드<select id="tsd">${SND.map((x,j)=>`<option value="${j}" ${T.snd==j?'selected':''}>${x[0]}</option>`).join('')}</select></div></div>
+${T.rec.length?'<h2>최근 항목</h2>':''}${T.rec.map((r,i)=>`<div class="row" style="min-height:70px"><div class="l" data-a="trc" data-i="${i}" style="cursor:pointer"><div class="at" style="font-size:28px">${r.s[0]?r.s[0]+'시간 ':''}${r.s[1]?r.s[1]+'분 ':''}${r.s[2]?r.s[2]+'초':''}</div><div class="sm">${r.l||'타이머'}</div></div>${E[3]?`<button class="ib dl" data-a="tdr" data-i="${i}">⊖</button>`:`<button class="cb gr" style="width:52px;height:52px;font-size:18px" data-a="trs" data-i="${i}">▶</button>`}</div>`).join('')}`;
+wheel($('#th'),rng(24,0).map(Number),'시간',T.sel[0]);wheel($('#tmn'),rng(60).map(Number),'분',T.sel[1]);wheel($('#ts'),rng(60).map(Number),'초',T.sel[2]);
+['th','tmn','ts'].forEach((id,j)=>$('#'+id).addEventListener('wch',()=>{T.sel[j]=val($('#'+id));save()}));
+$('#tl').value=T.lab;$('#tl').oninput=e=>{T.lab=e.target.value;save()};$('#tsd').onchange=e=>{T.snd=+e.target.value;save()}}
+else{const run=T.state=='run';p.innerHTML=`<div class="big" id="tmt">${ft(run?Math.max(0,T.end-Date.now()):T.left)}</div><div class="sm" style="text-align:center;font-size:20px">${T.lab||'타이머'}</div><div class="btns" style="margin-top:50px"><button class="cb g" data-a="tcl">취소</button><button class="cb ${run?'or':'gr'}" data-a="tps">${run?'일시 정지':'재개'}</button></div>`}}
+function startT(h,m,s,lab,snd){const T=S.tm,tot=(h*3600+m*60+s)*1e3;if(!tot)return;T.lab=lab;T.snd=snd;T.total=tot;T.left=tot;T.end=Date.now()+tot;T.state='run';
+T.rec=T.rec.filter(r=>!(r.s.join()==[h,m,s].join()&&r.l==lab));T.rec.unshift({s:[h,m,s],l:lab,snd});T.rec=T.rec.slice(0,8);save();rTimer()}
+/* ---- actions ---- */
+const rr=()=>[rWorld,rAlarm,rSw,rTimer][tab]();
+const A={tab(i){tab=+i;document.querySelectorAll('.page').forEach((p,j)=>p.classList.toggle('on',j==tab));document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',j==tab));rr()},
+edit(){E[tab]=!E[tab];rr()},addc:addCity,adda:()=>editAlarm(),
+delc(i){S.c.splice(i,1);save();rWorld()},mvc(i,t){mv(S.c,+i,+t.dataset.j);rWorld()},
+dela(i){S.al.splice(i,1);save();rAlarm()},mva(i,t){mv(S.al,+i,+t.dataset.j);rAlarm()},eda:i=>editAlarm(+i),tga(i){const a=S.al[i];a.on=!a.on;a.snz=0;save();rAlarm()},
+sws(){const w=S.sw;if(w.run){w.acc+=Date.now()-w.st;w.run=0}else{w.st=Date.now();w.run=1}save();rSw()},
+swl(){const w=S.sw;if(w.run)w.laps.push(el());else{w.acc=0;w.laps=[]}save();rSw()},
+tgo(){const T=S.tm;startT(...T.sel,T.lab,T.snd)},
+tcl(){const T=S.tm;if(T.state!='idle'){T.state='idle';save();rTimer()}else{T.sel=[0,0,0];save();rTimer()}},
+tps(){const T=S.tm;if(T.state=='run'){T.left=T.end-Date.now();T.state='pause'}else{T.end=Date.now()+T.left;T.state='run'}save();rTimer()},
+trs(i){const r=S.tm.rec[i];startT(...r.s,r.l,r.snd)},trc(i){const r=S.tm.rec[i];S.tm.sel=[...r.s];S.tm.lab=r.l;S.tm.snd=r.snd;save();rTimer()},tdr(i){S.tm.rec.splice(i,1);save();rTimer()}};
+function mv(a,i,d){const j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];save()}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(t&&A[t.dataset.a])A[t.dataset.a](t.dataset.i,t)});
+/* ---- tick ---- */
+let lastS=-1;
+function tick(){const n=Date.now();
+if(tab==2&&S.sw.run){const x=$('#swt');if(x)x.textContent=fs(el())}
+const T=S.tm;if(T.state=='run'){if(n>=T.end){const lab=T.lab||'타이머',sn=T.snd;T.state='idle';save();ring('타이머',lab+' 종료',sn);if(tab==3)rTimer()}else if(tab==3){const x=$('#tmt');if(x)x.textContent=ft(T.end-n)}}
+const s=Math.floor(n/1e3);if(s!=lastS){lastS=s;chkAlarms();if(tab==0&&!E[0]&&P(undefined,new Date()).minute!=lastMin)rWorld()}}
+setInterval(tick,50);document.addEventListener('visibilitychange',()=>{if(!document.hidden){tick();rr()}});
+A.tab(0);
+</script></body></html>
