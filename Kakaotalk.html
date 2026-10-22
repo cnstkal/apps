@@ -4,10 +4,10 @@
 <style>
 :root{--ink:#111;--g:#8b8d92;--line:#efefef;--chip:#f2f2f3;--bg:#fff;--room:#b0c0d0;--me:#fae64c;--org:#e8531f;box-sizing:border-box}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-html,body{height:100%;margin:0;background:#e5e5e7;font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink)}
+html,body{width:100%;max-width:100%;height:100%;margin:0;padding:0;background:#fff;font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink)}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 input,textarea,select{font:inherit;font-size:16px}
-#app{position:relative;max-width:430px;height:100%;margin:0 auto;background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+#app{position:relative;width:100%;max-width:none;height:100%;margin:0;background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
 .hdr{padding:calc(env(safe-area-inset-top,0px) + 14px) 20px 8px;display:flex;align-items:center;gap:16px;min-height:62px}
 .hdr h1{flex:1;margin:0;font-size:24px;font-weight:700}
 .hdr .nm{flex:1;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px;min-width:0}
