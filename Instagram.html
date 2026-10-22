@@ -4,10 +4,10 @@
 <title>Instagram</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{zoom:.9}html,body{margin:0;height:100%;background:#fff;color:#000;font-family:-apple-system,"Apple SD Gothic Neo",Pretendard,"Noto Sans KR",sans-serif;touch-action:manipulation;overscroll-behavior:none}
+html,body{width:100%;max-width:100%;margin:0;height:100%;background:#fff;color:#000;font-family:-apple-system,"Apple SD Gothic Neo",Pretendard,"Noto Sans KR",sans-serif;touch-action:manipulation;overscroll-behavior:none}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 input,textarea,select{font:inherit;font-size:16px;color:#000}
-#app{position:fixed;inset:0;max-width:480px;margin:auto;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+#app{position:fixed;inset:0;width:100%;max-width:none;margin:0;background:#fff;display:flex;flex-direction:column;overflow:hidden}
 #main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
 #sc{flex:1;min-height:0;overflow-y:auto;padding-bottom:96px}
 .chat #sc{padding-bottom:8px}
@@ -70,7 +70,7 @@ nav .ni{flex:1;display:flex;align-items:center;justify-content:center;border-rad
 .ib input{flex:1;min-width:0;background:none;border:0;outline:0;padding:8px 2px}
 .ib .ic{display:flex;gap:14px;align-items:center}.ib .snd{color:#4a5cf5;font-weight:700;font-size:17px;display:none}
 .cb{display:flex;align-items:center;gap:10px}.cb .hb{width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center}
-.L{position:fixed;inset:0;max-width:480px;margin:auto;z-index:50}
+.L{position:fixed;inset:0;width:100%;max-width:none;margin:0;z-index:50}
 #pd,#st{background:#fff;display:none;flex-direction:column}#st{background:#000;z-index:60}
 #fm,#sh{background:rgba(0,0,0,.45);display:none;align-items:flex-end;z-index:70}#sh{z-index:80}
 .sheet{background:#fff;width:100%;border-radius:20px 20px 0 0;max-height:88%;overflow-y:auto;padding:14px 16px calc(16px + env(safe-area-inset-bottom))}
