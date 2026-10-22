@@ -15,7 +15,7 @@ html,body{margin:0;height:100%;overflow:hidden;font-family:-apple-system,"SF Pro
   radial-gradient(120% 80% at 50% 100%,#ffb3c7 0%,transparent 65%),
   linear-gradient(160deg,#4f7bff 0%,#8f6cff 45%,#ff8fb1 100%);}
 
-#phone{position:relative;width:100%;max-width:none;height:100dvh;margin:0 auto;display:flex;flex-direction:column;z-index:1}
+#phone{position:relative;width:min(100vw,56.25dvh);height:100dvh;aspect-ratio:9/16;margin:0 auto;display:flex;flex-direction:column;z-index:1;overflow:hidden}
 
 /* 상태바 */
 .sb{display:none}
