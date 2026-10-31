@@ -205,6 +205,30 @@ svg{display:block;flex:none}
 #toast{position:absolute;left:50%;bottom:116px;transform:translate(-50%,10px);background:rgba(20,20,20,.9);color:#fff;font-size:14px;padding:11px 18px;border-radius:20px;opacity:0;pointer-events:none;transition:.22s;z-index:99;white-space:nowrap}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 #sb,.hi{display:none!important}
+
+.ovp,#phone{max-width:100%;overflow-x:hidden}
+.rin{width:100%;box-sizing:border-box;max-width:100%;padding:8px 12px 26px}
+.inw{min-width:0;flex:1 1 0}
+.gif,.snd{flex:none}
+.dsc{flex:1;overflow-y:auto;padding:0 12px 0;scrollbar-width:none;background:var(--bg)}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:58px 8px 14px}
+.dname{font-size:32px;font-weight:600;display:flex;align-items:center;gap:8px;letter-spacing:-.4px}.dname span{font-weight:400}
+.dsub{font-size:14px;color:#2fa84f;margin-top:4px}
+.dph{position:relative;width:100%;aspect-ratio:1/1.1;border-radius:28px;overflow:hidden;background:#222;margin-bottom:10px}
+.dph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dcard{position:relative;background:#fff;border-radius:26px;padding:18px 18px 16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.dct{font-size:15px;color:var(--sub);display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.dcard p{margin:0;font-size:22px;line-height:1.45;font-weight:500;padding-right:90px;min-height:28px}
+.dcard p.dq{font-size:17px;color:#4a4647;margin-top:8px;font-weight:400}
+.drow{display:flex;gap:12px;align-items:center;font-size:18px;padding:12px 0;border-bottom:1px solid #ece9ea}
+.drow:last-of-type{border-bottom:0}
+.dreply{display:flex;gap:6px;align-items:center;border:1px solid #e3e0e1;border-radius:22px;padding:9px 16px;font-size:16px;font-weight:500;margin:6px 0 0 auto;background:#fff}
+.dcard .dreply{position:absolute;right:16px;bottom:14px;margin:0}
+.dcard:has(.drow) .dreply,.dcard:has(.ch) .dreply{position:absolute;right:16px;bottom:14px}
+.dcard:has(.ch){padding-bottom:58px}
+.dfab{position:absolute;bottom:26px;left:0;right:0;display:flex;justify-content:center;gap:16px;align-items:center;pointer-events:none;z-index:3}
+.dfab button{pointer-events:auto;background:#fff;box-shadow:0 3px 14px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;border-radius:50%}
+.dfab button:active{transform:scale(.92)}
 </style>
 </head>
 <body>
@@ -282,6 +306,7 @@ star:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.8
 send:'<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',
 pin:'<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
 shield:'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+chevd:'<path d="m6 9 6 6 6-6"/>',
 back:'<path d="m15 18-6-6 6-6"/>',
 more:'<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
 zap:'<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
@@ -489,6 +514,11 @@ function fly(kind){
   const id=el.dataset.id;
   setTimeout(()=>{decide(id,kind);el.remove();layoutStack();refresh(true);busy=false},880);
 }
+function flyBtn(kind){
+  if(busy||drag)return;const el=stack.querySelector('[data-pos="0"]');if(!el)return;busy=true;
+  const st=el.querySelector(kind==='like'?'.like':kind==='pass'?'.nope':'.sup');st.style.transition='opacity .25s';st.style.opacity=1;
+  setTimeout(()=>{busy=false;fly(kind)},550);
+}
 /* ---------- decisions / match ---------- */
 function decide(id,kind){
   if(S.decided[id])return;S.decided[id]=kind;if(S.front===id)S.front=null;let m=false;
@@ -560,18 +590,24 @@ function renderProfile(){
 /* ---------- overlays: detail ---------- */
 let dIdx=0;
 function openDetail(id){
-  const p=P[id];if(!p||p.official)return;dIdx=0;const o=document.createElement('div');o.className='ovp slideup';o.id='detail';o.dataset.id=id;
-  const hasAct=!S.matches.includes(id)&&!S.decided[id];
-  o.innerHTML=`<div class="dsc"><div class="dph" id="dph"><img id="dimg" src="${p.photos[0]}" alt="" style="object-position:${p.pos}"><div class="gtop"></div><div class="dots" style="top:16px;z-index:4" id="ddots">${dotsHTMLd(p,0)}</div><button class="circ dbk" data-act="dclose" aria-label="뒤로">${ic('back',24,'none',2.4)}</button></div>
-  <div class="dbody"><h2>${esc(p.name)} <span>${p.age}</span>${p.verified?vf(26,'#171717'):''}</h2>
-  <div class="dl">${ic('pin',18)}${p.dist}km 거리에 있음</div>
-  ${p.job.trim()?`<div class="dl">${ic('briefcase',18)}${esc(p.job)}</div>`:''}${p.school.trim()?`<div class="dl">${ic('school',18)}${esc(p.school)}</div>`:''}
-  ${p.bio.trim()?`<h3>자기소개</h3><p>${esc(p.bio)}</p>`:''}${p.intro.trim()?`<p style="margin-top:8px;color:#4a4647">${esc(p.intro)}</p>`:''}
-  ${p.tags.length?`<h3>관심사</h3><div class="ch">${p.tags.map(t=>`<b>${esc(t)}</b>`).join('')}</div>`:''}
-  <h3>사진</h3><div class="pg">${p.photos.map(s=>`<img src="${s}" alt="">`).join('')}</div></div></div>
-  ${hasAct?`<div class="dacts"><button class="da" style="width:62px;height:62px" data-act="dpass" data-id="${id}">${ic('x',30,'none',3.2)}</button><button class="da" style="width:76px;height:76px;color:#f0261e" data-act="dlike" data-id="${id}">${ic('heart',38,'currentColor',1.5)}</button><button class="da" style="width:62px;height:62px;color:#3e9bff" data-act="dsuper" data-id="${id}">${ic('star',28,'currentColor',1.5)}</button></div>`:''}`;
+  const p=P[id];if(!p||p.official)return;dIdx=0;
+  const o=document.createElement('div');o.className='ovp slideup';o.id='detail';o.dataset.id=id;
+  const acts=!S.matches.includes(id)&&!S.decided[id];
+  const reply=`<button class="dreply" data-act="dreply" data-id="${id}">${ic('send',17,'currentColor',2)}답장</button>`;
+  const rows=[['pin',`${p.dist}km 거리에 있음`],...(p.job.trim()?[['briefcase',p.job]]:[]),...(p.school.trim()?[['school',p.school]]:[])];
+  const bio=p.bio.trim(),intro=p.intro.trim();
+  o.innerHTML=`<div class="dsc" id="dsc">
+   <div class="dhead"><div><div class="dname">${esc(p.name)} <span>${p.age}</span>${p.verified?vf(24,'#171717'):''}</div>${p.online?'<div class="dsub">접속 중</div>':''}</div><button class="circ" data-act="dclose" aria-label="닫기">${ic('chevd',22,'none',2.6)}</button></div>
+   <div class="dph" id="dph"><img id="dimg" src="${p.photos[0]}" alt="" style="object-position:${p.pos}"><div class="dots" style="top:14px" id="ddots">${dotsHTMLd(p,0)}</div></div>
+   ${(bio||intro)?`<div class="dcard"><div class="dct">${ic('search',16)}찾고 있는 상대</div><p>${esc(bio||intro)}</p>${bio&&intro?`<p class="dq">${esc(intro)}</p>`:''}${reply}</div>`:''}
+   <div class="dph"><img src="${p.photos[1]}" alt=""></div>
+   <div class="dcard"><div class="dct">${ic('user',16)}기본 정보</div>${rows.map(([i,t])=>`<div class="drow">${ic(i,20)}<span>${esc(t)}</span></div>`).join('')}${reply}</div>
+   ${p.tags.length?`<div class="dcard"><div class="dct">${ic('heart',16)}관심사</div><div class="ch">${p.tags.map(t=>`<b>${esc(t)}</b>`).join('')}</div>${reply}</div>`:''}
+   <div class="dph"><img src="${p.photos[2]}" alt=""></div>
+   <div style="height:20px"></div></div>
+   ${acts?`<div class="dfab"><button class="da" style="width:62px;height:62px" data-act="dpass" data-id="${id}">${ic('x',28,'none',3.2)}</button><button class="da" style="width:52px;height:52px;color:#5b8def" data-act="dsuper" data-id="${id}">${ic('star',24,'currentColor',1.5)}</button><button class="da" style="width:62px;height:62px;color:#f0261e" data-act="dlike" data-id="${id}">${ic('heart',32,'currentColor',1.5)}</button></div>`:''}`;
   $('#ov').appendChild(o);
-  $('#dph').addEventListener('click',e=>{if(e.target.closest('[data-act]'))return;const r=e.currentTarget.getBoundingClientRect();const n=p.photos.length;dIdx=Math.max(0,Math.min(n-1,dIdx+((e.clientX-r.left)<r.width/2?-1:1)));const im=$('#dimg');im.src=p.photos[dIdx];im.animate([{opacity:.4},{opacity:1}],{duration:180});$('#ddots').innerHTML=dotsHTMLd(p,dIdx)});
+  $('#dph').addEventListener('click',e=>{const r=e.currentTarget.getBoundingClientRect();const n=p.photos.length;dIdx=Math.max(0,Math.min(n-1,dIdx+((e.clientX-r.left)<r.width/2?-1:1)));const im=$('#dimg');im.src=p.photos[dIdx];im.animate([{opacity:.4},{opacity:1}],{duration:180});$('#ddots').innerHTML=dotsHTMLd(p,dIdx)});
 }
 const dotsHTMLd=(p,n)=>p.photos.map((_,i)=>`<i class="${i===n?'on':''}"></i>`).join('');
 function closeDetail(){const d=$('#detail');if(!d)return;d.classList.remove('slideup');d.classList.add('outd');setTimeout(()=>d.remove(),220)}
@@ -611,7 +647,7 @@ function closeRoom(){const r=$('#room');if(!r)return;r.classList.remove('slidein
 /* ---------- actions ---------- */
 const ACT={
  tab:(id)=>setTab(id),
- pass:()=>fly('pass'),like:()=>fly('like'),super:()=>fly('super'),undo,
+ pass:()=>flyBtn('pass'),like:()=>flyBtn('like'),super:()=>flyBtn('super'),undo,
  share:()=>toast('프로필을 공유했어요 (시뮬레이션)'),
  soon:()=>toast('시뮬레이션에서는 제공하지 않는 기능이에요'),
  safe:()=>toast('안전 센터는 시뮬레이션에서 제공하지 않아요'),
@@ -623,6 +659,7 @@ const ACT={
  cat:(id)=>{S.likeCat=+id;$('#panes').scrollTo({left:$('#panes').clientWidth*id,behavior:'smooth'});[...$('#cats').children].forEach((c,j)=>c.classList.toggle('on',j==id))},
  flt:(id)=>{if(id==='reset')S.filters={};else S.filters[id]=!S.filters[id];renderLike()},
  mmsg:(id)=>{document.querySelector('.mt-ov')?.remove();setTab('chat');openRoom(id)},
+ dreply:(id)=>{if(S.matches.includes(id)){closeDetail();setTab('chat');setTimeout(()=>openRoom(id),240)}else toast('매치된 뒤에 답장할 수 있어요')},
  mkeep:()=>{document.querySelector('.mt-ov')?.remove()}
 };
 document.addEventListener('click',e=>{const t=e.target.closest('[data-act]');if(!t)return;const f=ACT[t.dataset.act];if(f){e.stopPropagation();f(t.dataset.id,t,e)}});
