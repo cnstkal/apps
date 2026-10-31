@@ -53,14 +53,15 @@ svg{display:block;flex:none}
 .bd.g::before{content:"";width:8px;height:8px;border-radius:50%;background:#34c759}
 .nm{display:flex;align-items:center;gap:8px;font-size:34px;font-weight:600;letter-spacing:-.5px;line-height:1.15}
 .nm span{font-weight:400}
+.rcv{display:inline-flex;align-items:center;align-self:flex-start;background:#e9b52e;color:#171717;font-size:15px;font-weight:600;border-radius:16px;padding:7px 14px;margin:0 0 12px}
 .up{position:absolute;right:20px;bottom:222px;width:48px;height:48px;border-radius:50%;background:#fff;color:#171717;display:flex;align-items:center;justify-content:center;pointer-events:auto}
 .ln{display:flex;gap:8px;align-items:center;font-size:17px;margin-top:8px;opacity:.95}
 .ln.s{font-size:16px}
 .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .tags b{font-weight:500;font-size:13px;border:1px solid rgba(255,255,255,.7);border-radius:14px;padding:4px 10px}
 .stamp{position:absolute;opacity:0;pointer-events:none;font-weight:800;border:4px solid;padding:2px 14px;border-radius:10px;font-size:36px;letter-spacing:2px;z-index:5}
-.stamp.like{top:130px;left:24px;color:#ff4b55;transform:rotate(-14deg)}
-.stamp.nope{top:130px;right:24px;color:#f1f1f1;transform:rotate(14deg)}
+.stamp.like{top:17%;left:9%;width:132px;height:132px;transform:rotate(-12deg);filter:drop-shadow(0 4px 14px rgba(0,0,0,.25));border:0;padding:0;font-size:0;margin:0}
+.stamp.nope{top:19%;right:9%;width:124px;height:124px;transform:rotate(10deg);filter:drop-shadow(0 4px 14px rgba(0,0,0,.25));border:0;padding:0;font-size:0;margin:0}
 .stamp.sup{top:38%;left:50%;margin-left:-100px;width:200px;border:0;display:flex;flex-direction:column;align-items:center;color:var(--blue);font-size:26px;gap:6px}
 #menu{position:absolute;top:54px;left:0;right:0;height:44px;z-index:30;display:flex;align-items:center;gap:6px;padding:0 14px;color:#fff;pointer-events:none}
 #menu>*{pointer-events:auto}
@@ -405,7 +406,7 @@ function infoHTML(p){
   if(ex==='job'&&p.job.trim())x=`<div class="ln s">${ic('briefcase',18)}<span>${esc(p.job)}</span></div>`;
   if(ex==='school'&&p.school.trim())x=`<div class="ln s">${ic('school',18)}<span>${esc(p.school)}</span></div>`;
   if(ex==='tags')x=`<div class="tags">${p.tags.slice(0,3).map(t=>`<b>${esc(t)}</b>`).join('')}</div>`;
-  return `<div class="badges">${p.online?'<span class="bd g">접속 중</span>':''}${p.dist<=10?'<span class="bd">근처</span>':''}</div>
+  return `<div class="badges">${p.online?'<span class="bd g">접속 중</span>':''}${p.dist<=10?'<span class="bd">근처</span>':''}</div>${p.likedMe&&!S.decided[p.id]&&!S.matches.includes(p.id)?'<div class="rcv">내가 받은 LIKE ›</div>':''}
   <div class="nm">${esc(p.name)} <span>${p.age}</span>${p.verified?vf(24,'#fff','#222'):''}</div>
   <div class="ln">${ic('pin',20)}<span>${p.dist}km 거리에 있음</span></div>${l2}${x}`;
 }
@@ -413,7 +414,7 @@ function dotsHTML(p){const n=S.photoIdx[p.id]||0;return p.photos.map((_,i)=>`<i 
 function makeCard(p){
   const el=document.createElement('div');el.className='card';el.dataset.id=p.id;
   el.innerHTML=`<img class="ph" draggable="false" alt="" src="${p.photos[S.photoIdx[p.id]||0]}" style="object-position:${p.pos}"><div class="gtop"></div><div class="gbot"></div><div class="dots">${dotsHTML(p)}</div>
-  <div class="stamp like">LIKE</div><div class="stamp nope">NOPE</div><div class="stamp sup">${ic('star',56,'currentColor',1.5)}<span>SUPER LIKE</span></div>
+  <div class="stamp like"><svg viewBox="0 0 24 24" width="132" height="132" fill="#ff1f2d"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div><div class="stamp nope"><svg viewBox="0 0 24 24" width="124" height="124" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></div><div class="stamp sup">${ic('star',56,'currentColor',1.5)}<span>SUPER LIKE</span></div>
   <div class="info">${infoHTML(p)}</div><button class="up" data-act="detail" data-id="${p.id}" aria-label="상세 보기">${ic('up',24,'none',3)}</button>`;
   return el;
 }
@@ -482,11 +483,11 @@ function photoStep(id,dir,el){
 function fly(kind){
   if(busy||drag)return;const el=stack.querySelector('[data-pos="0"]');if(!el)return;busy=true;
   const T={like:'translate(560px,-30px) rotate(26deg)',pass:'translate(-560px,-30px) rotate(-26deg)',super:'translate(0,-820px) rotate(0deg)'};
-  const st=el.querySelector(kind==='like'?'.like':kind==='pass'?'.nope':'.sup');st.style.transition='opacity .12s';st.style.opacity=1;
-  el.style.transition='transform .4s cubic-bezier(.35,.7,.4,1),opacity .4s';el.style.transform=T[kind];
-  const nx=stack.querySelector('[data-pos="1"]');if(nx){nx.style.transition='transform .35s ease,filter .35s';nx.style.transform='translateY(0) scale(1)';nx.style.filter='none'}
+  const st=el.querySelector(kind==='like'?'.like':kind==='pass'?'.nope':'.sup');st.style.transition='opacity .25s';st.style.opacity=1;
+  el.style.transition='transform .85s cubic-bezier(.22,.7,.3,1),opacity .85s ease-in';el.style.transform=T[kind];
+  const nx=stack.querySelector('[data-pos="1"]');if(nx){nx.style.transition='transform .6s ease,filter .6s';nx.style.transform='translateY(0) scale(1)';nx.style.filter='none'}
   const id=el.dataset.id;
-  setTimeout(()=>{decide(id,kind);el.remove();layoutStack();refresh(true);busy=false},390);
+  setTimeout(()=>{decide(id,kind);el.remove();layoutStack();refresh(true);busy=false},880);
 }
 /* ---------- decisions / match ---------- */
 function decide(id,kind){
